@@ -1,4 +1,4 @@
-package com;
+package com.UTFPR;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

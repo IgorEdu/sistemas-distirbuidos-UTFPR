@@ -1,0 +1,21 @@
+module com.sistemasdistribuido {
+    requires javafx.controls;
+    requires javafx.fxml;
+
+    requires com.dlsc.formsfx;
+    requires org.kordamp.bootstrapfx.core;
+    requires com.fasterxml.jackson.databind;
+    requires jakarta.persistence;
+    opens com.domain.entities;
+
+    opens com to javafx.fxml;
+    exports com.controller;
+    opens com.controller to javafx.fxml;
+    exports com;
+    exports com.domain.dto;
+    opens com.domain.dto to javafx.fxml;
+    exports com.old.models;
+    opens com.old.models to javafx.fxml;
+    exports com.old;
+    opens com.old to javafx.fxml;
+}

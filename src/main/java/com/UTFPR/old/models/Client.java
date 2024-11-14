@@ -1,7 +1,7 @@
-package com.models;
+package com.UTFPR.old.models;
 
 public class Client {
-    String text;
+    String text = "teste";
 
     public Client(){
     }
