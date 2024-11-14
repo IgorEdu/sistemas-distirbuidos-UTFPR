@@ -112,13 +112,14 @@ public class Server extends Thread {
                 ResponseService responseService = new ResponseService();
                 ResponseFormatter responseFormatter = new ResponseFormatter(new ObjectMapper());
 
+                String clientAddress = String.valueOf(clientSocket.getInetAddress());
+
                 CommandFactory commandFactory = new CommandFactory(userService, responseService, responseFormatter, out);
-                Command command = commandFactory.createCommand(operacaoDTO, inputLine);
+                Command command = commandFactory.createCommand(operacaoDTO, inputLine, clientAddress);
                 CommandInvoker invoker = new CommandInvoker();
                 invoker.executeCommand(command);
 //                if (operacaoDTO.getOperacao().equals("login")) {
-//                    System.out.println("Login solicitado");
-//                    System.out.println("Client (" + clientSocket.getInetAddress() + "): " + inputLine);
+
 //
 //                    if (operacaoDTO.getOperacao().equals("login")) {
 //                        EntityManager em = emf.createEntityManager();
@@ -134,8 +135,7 @@ public class Server extends Thread {
 //                            responseDTO.setStatus(200);
 //                            responseDTO.setToken(users.get(0).getNome());
 //
-//                            String response = objectMapper.writeValueAsString(responseDTO);
-//                            System.out.println("Server (" + clientSocket.getInetAddress() + "): " + response);
+
 //                            out.println(response);
 //                        } else {
 //                            ResponseDTO responseDTO = new ResponseDTO();

@@ -15,13 +15,15 @@ public class CadastroUsuarioCommand implements Command {
     private ResponseService responseService;
     private ResponseFormatter responseFormatter;
     private PrintWriter out;
+    private String clientAddress;
 
-    public CadastroUsuarioCommand(CadastroDTO cadastroDTO, UserService userService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out) {
+    public CadastroUsuarioCommand(CadastroDTO cadastroDTO, UserService userService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out, String clientAddress) {
         this.cadastroDTO = cadastroDTO;
         this.userService = userService;
         this.responseService = responseService;
         this.responseFormatter = responseFormatter;
         this.out = out;
+        this.clientAddress = clientAddress;
     }
 
     @Override
@@ -35,6 +37,7 @@ public class CadastroUsuarioCommand implements Command {
         }
 
         String response = responseFormatter.formatResponse(responseDTO);
+        System.out.println("Server (" + clientAddress + "): " + response);
         out.println(response);
     }
 }

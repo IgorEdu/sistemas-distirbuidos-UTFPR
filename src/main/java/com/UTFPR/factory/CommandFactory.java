@@ -29,17 +29,19 @@ public class CommandFactory {
         this.out = out;
     }
 
-    public Command createCommand(OperacaoDTO operacaoDTO, String inputLine) throws IOException {
+    public Command createCommand(OperacaoDTO operacaoDTO, String inputLine, String clientAddress) throws IOException {
+
+        System.out.println("Client (" + clientAddress + "): " + inputLine);
         switch (operacaoDTO.getOperacao()) {
             case "login":
                 LoginDTO loginDTO = new ObjectMapper().readValue(inputLine, LoginDTO.class);
-                return new LoginCommand(loginDTO, userService, responseService, responseFormatter, out, inputLine);
+                return new LoginCommand(loginDTO, userService, responseService, responseFormatter, out, clientAddress);
             case "cadastrarUsuario":
                 CadastroDTO cadastroDTO = new ObjectMapper().readValue(inputLine, CadastroDTO.class);
-                return new CadastroUsuarioCommand(cadastroDTO, userService, responseService, responseFormatter, out);
+                return new CadastroUsuarioCommand(cadastroDTO, userService, responseService, responseFormatter, out, clientAddress);
             case "logout":
                 LogoutDTO logoutDTO = new ObjectMapper().readValue(inputLine, LogoutDTO.class);
-                return new LogoutCommand(logoutDTO, userService, responseService, responseFormatter, out, inputLine);
+                return new LogoutCommand(logoutDTO, userService, responseService, responseFormatter, out, clientAddress);
             default:
                 throw new IllegalArgumentException("Operação desconhecida: " + operacaoDTO.getOperacao());
         }

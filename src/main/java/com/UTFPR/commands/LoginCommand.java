@@ -16,28 +16,29 @@ public class LoginCommand implements Command {
     private ResponseService responseService;
     private ResponseFormatter responseFormatter;
     private PrintWriter out;
-    private String inputLine;
+    private String clientAddress;
 
-    public LoginCommand(LoginDTO loginDTO, UserService userService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out, String inputLine) {
+    public LoginCommand(LoginDTO loginDTO, UserService userService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out, String clientAddress) {
         this.loginDTO = loginDTO;
         this.userService = userService;
         this.responseService = responseService;
         this.responseFormatter = responseFormatter;
         this.out = out;
-        this.inputLine = inputLine;
+        this.clientAddress = clientAddress;
     }
 
     @Override
     public void execute() throws IOException {
         ResponseDTO responseDTO;
-        if(userService.isValidUser(loginDTO)){
+        if (userService.isValidUser(loginDTO)) {
             String token = userService.generateToken(loginDTO.getRa());
             responseDTO = responseService.createSuccessResponseWithToken("Login bem-sucedido", token);
-        } else{
+        } else {
             responseDTO = responseService.createErrorResponse("Erro ao realizar login.");
         }
 
         String response = responseFormatter.formatResponse(responseDTO);
+        System.out.println("Server (" + clientAddress + "): " + response);
         out.println(response);
     }
 }

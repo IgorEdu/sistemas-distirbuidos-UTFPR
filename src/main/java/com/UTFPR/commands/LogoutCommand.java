@@ -19,15 +19,15 @@ public class LogoutCommand implements Command {
     private ResponseService responseService;
     private ResponseFormatter responseFormatter;
     private PrintWriter out;
-    private String inputLine;
+    private String clientAddress;
 
-    public LogoutCommand(LogoutDTO logoutDTO, UserService userService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out, String inputLine) {
+    public LogoutCommand(LogoutDTO logoutDTO, UserService userService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out, String clientAddress) {
         this.logoutDTO = logoutDTO;
         this.userService = userService;
         this.responseService = responseService;
         this.responseFormatter = responseFormatter;
         this.out = out;
-        this.inputLine = inputLine;
+        this.clientAddress = clientAddress;
     }
 
     @Override
@@ -35,6 +35,7 @@ public class LogoutCommand implements Command {
         ResponseDTO responseDTO = responseService.createSuccessResponse("Logout bem-sucedido");
 
         String response = responseFormatter.formatResponse(responseDTO);
+        System.out.println("Server (" + clientAddress + "): " + response);
 
 //                    System.out.println("Client (" + clientSocket.getInetAddress() + "): " + inputLine);
 //                    System.out.println("Cliente desconectado: " + clientSocket.getInetAddress());
