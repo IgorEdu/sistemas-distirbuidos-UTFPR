@@ -9,13 +9,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
-    private Integer ra;
+    private String ra;
     private String senha;
     private String nome;
     @Column(name = "is_admin")
     private boolean isAdmin;
 
-    public User(int ra, String senha, String nome) {
+    public User(String ra, String senha, String nome) {
         this.ra = ra;
         this.senha = senha;
         this.nome = nome;
@@ -33,11 +33,11 @@ public class User {
         this.id = id;
     }
 
-    public int getRa() {
+    public String getRa() {
         return ra;
     }
 
-    public void setRa(int ra) {
+    public void setRa(String ra) {
         this.ra = ra;
     }
 
