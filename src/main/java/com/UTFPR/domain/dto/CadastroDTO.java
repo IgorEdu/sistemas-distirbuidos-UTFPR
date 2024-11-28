@@ -1,16 +1,17 @@
 package com.UTFPR.domain.dto;
 
 import com.UTFPR.domain.entities.User;
+import com.UTFPR.domain.contracts.CredentialProvider;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class CadastroDTO {
+public class CadastroDTO implements CredentialProvider {
     private String operacao;
-    private int ra;
+    private String ra;
     private String senha;
     private String nome;
 
-    public CadastroDTO(String operacao, int ra, String senha, String nome) {
+    public CadastroDTO(String operacao, String ra, String senha, String nome) {
         this.operacao = operacao;
         this.ra = ra;
         this.senha = senha;
@@ -32,11 +33,11 @@ public class CadastroDTO {
         this.operacao = operacao;
     }
 
-    public int getRa() {
+    public String getRa() {
         return ra;
     }
 
-    public void setRa(int ra) {
+    public void setRa(String ra) {
         this.ra = ra;
     }
 

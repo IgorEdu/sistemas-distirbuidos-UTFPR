@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseDTO {
     private int status;
+    private String operacao;
     private String mensagem;
     private String token;
 
@@ -19,6 +20,13 @@ public class ResponseDTO {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getOperacao() {
+        return operacao;
+    }
+    public void setOperacao(String operacao) {
+        this.operacao = operacao;
     }
 
     public String getMensagem() {
