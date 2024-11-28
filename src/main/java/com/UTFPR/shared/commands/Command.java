@@ -1,6 +1,4 @@
-package com.UTFPR.commands;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
+package com.UTFPR.shared.commands;
 
 import java.io.IOException;
 

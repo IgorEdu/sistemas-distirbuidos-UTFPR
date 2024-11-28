@@ -1,10 +1,11 @@
-package com.UTFPR.commands;
+package com.UTFPR.server.commands;
 
 import com.UTFPR.domain.dto.LogoutDTO;
 import com.UTFPR.domain.dto.ResponseDTO;
-import com.UTFPR.service.ResponseFormatter;
-import com.UTFPR.service.ResponseService;
-import com.UTFPR.service.UserService;
+import com.UTFPR.server.service.ResponseFormatter;
+import com.UTFPR.server.service.ResponseService;
+import com.UTFPR.server.service.UserService;
+import com.UTFPR.shared.commands.Command;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -28,7 +29,7 @@ public class LogoutCommand implements Command {
 
     @Override
     public void execute() throws IOException {
-        ResponseDTO responseDTO = responseService.createSuccessResponse("Logout bem-sucedido");
+        ResponseDTO responseDTO = responseService.createSuccessResponse();
 
         String response = responseFormatter.formatResponse(responseDTO);
         System.out.println("Server (" + clientAddress + "): " + response);

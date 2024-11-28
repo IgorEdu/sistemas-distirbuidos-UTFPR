@@ -1,4 +1,6 @@
-package com.UTFPR.commands;
+package com.UTFPR.server.commands;
+
+import com.UTFPR.shared.commands.Command;
 
 import java.io.IOException;
 

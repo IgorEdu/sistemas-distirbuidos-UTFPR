@@ -1,10 +1,9 @@
-package com.UTFPR.commands;
+package com.UTFPR.server.commands;
 
 import com.UTFPR.domain.dto.CadastroDTO;
 import com.UTFPR.domain.dto.ResponseDTO;
-import com.UTFPR.service.ResponseFormatter;
-import com.UTFPR.service.ResponseService;
-import com.UTFPR.service.UserService;
+import com.UTFPR.server.service.*;
+import com.UTFPR.shared.commands.Command;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -28,17 +27,22 @@ public class CadastroUsuarioCommand implements Command {
 
     @Override
     public void execute() throws IOException {
-        ResponseDTO responseDTO;
-        if(userService.canRegisterUser(cadastroDTO)) {
-            userService.registerUser(cadastroDTO.toEntity());
-            responseDTO = responseService.createSuccessResponse("Cadastro bem-sucedido");
-        } else{
-            responseDTO = responseService.createErrorResponse("Usuario já cadastrado.");
-        }
+//        ResponseDTO responseDTO;
+//        if(userService.canRegisterUser(cadastroDTO)) {
+//            userService.registerUser(cadastroDTO.toEntity());
+//            responseDTO = responseService.createSuccessResponseWithMessage("Cadastro bem-sucedido");
+//        } else{
+//            responseDTO = responseService.createErrorResponse(cadastroDTO.getOperacao(),"Usuario já cadastrado.");
+//        }
 
-        String response = responseFormatter.formatResponse(responseDTO);
-        System.out.println("Server (" + clientAddress + "): " + response);
+        CadastroUsuarioFacade cadastroUsuarioFacade = new CadastroUsuarioFacade(userService, responseService, responseFormatter);
+
+        String response = cadastroUsuarioFacade.handleCadastroUsuario(cadastroDTO, clientAddress);
         out.println(response);
+
+//        String response = responseFormatter.formatResponse(responseDTO);
+//        System.out.println("Server (" + clientAddress + "): " + response);
+//        out.println(response);
     }
 }
 
