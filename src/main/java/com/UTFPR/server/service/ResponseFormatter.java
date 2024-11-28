@@ -1,4 +1,4 @@
-package com.UTFPR.service;
+package com.UTFPR.server.service;
 
 import com.UTFPR.domain.dto.ResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
