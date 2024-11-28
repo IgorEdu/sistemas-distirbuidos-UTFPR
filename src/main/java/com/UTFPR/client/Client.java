@@ -1,6 +1,10 @@
-package com.UTFPR;
+package com.UTFPR.client;
 
+import com.UTFPR.client.commands.CadastroCommand;
+import com.UTFPR.client.commands.LoginCommand;
+import com.UTFPR.client.commands.LogoutCommand;
 import com.UTFPR.domain.dto.*;
+import com.UTFPR.shared.commands.Command;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.BufferedReader;
@@ -52,39 +56,32 @@ public class Client {
         System.out.println("Digite a operacao: ");
         System.out.println("\t1 - login");
         System.out.println("\t2 - cadastrar");
-        System.out.print ("input: ");
+        System.out.println("\t0 - sair");
+        System.out.print("input: ");
         while ((userInput = stdIn.readLine()) != null && token == null) {
-            if(userInput.equals("1")) {
-                System.out.println("Digite o RA (somente números): ");
-                int ra = Integer.parseInt(stdIn.readLine());
-                System.out.println("Digite a senha: ");
-                String senha = stdIn.readLine();
-
-                LoginDTO loginDTO = new LoginDTO("login", ra, senha);
-                String json = objectMapper.writeValueAsString(loginDTO);
-                System.out.println("Client: " + json);
-                out.println(json);
-            }
-
-            if(userInput.equals("2")) {
-                System.out.println("Digite o RA (somente números): ");
-                int ra = Integer.parseInt(stdIn.readLine());
-                System.out.println("Digite a senha: ");
-                String senha = stdIn.readLine();
-                System.out.println("Digite seu nome: ");
-                String nome = stdIn.readLine();
-
-                CadastroDTO cadastroDTO = new CadastroDTO("cadastrarUsuario", ra, senha, nome);
-                String json = objectMapper.writeValueAsString(cadastroDTO);
-                System.out.println("Client: " + json);
-                out.println(json);
+            Command command;
+            switch (userInput) {
+                case "0":
+                    encerrar(stdIn, out, in, echoSocket);
+                    return;
+                case "1":
+                    command = new LoginCommand(out, stdIn, objectMapper);
+                    command.execute();
+                    break;
+                case "2":
+                    command = new CadastroCommand(out, stdIn, objectMapper);
+                    command.execute();
+                    break;
+                default:
+                    System.out.println("Operação inválida.");
+                    continue;
             }
 
             String responseServer = in.readLine();
             System.out.println("Server: " + responseServer);
 
             ResponseDTO responseDTO = objectMapper.readValue(responseServer, ResponseDTO.class);
-            if(userInput.equals("1") && responseDTO.getStatus() == 200) {
+            if (userInput.equals("1") && responseDTO.getStatus() == 200) {
                 token = responseDTO.getToken();
                 break;
             }
@@ -92,50 +89,63 @@ public class Client {
             System.out.println("Digite a operacao: ");
             System.out.println("\t1 - login");
             System.out.println("\t2 - cadastrar");
-            System.out.print ("input: ");
+            System.out.println("\t0 - sair");
+            System.out.print("input: ");
         }
 
-        if(token != null){
+        if (token != null) {
             System.out.println("Usuário conectado...");
             System.out.println();
             System.out.println("Digite a operacao: ");
             System.out.println("\t1 - escolher preferencias");
             System.out.println("\t0 - sair");
-            System.out.print ("input: ");
+            System.out.print("input: ");
         }
 
 
         while ((userInput = stdIn.readLine()) != null && token != null) {
+            switch (userInput) {
+                case "0":
+                    Command logoutCommand = new LogoutCommand(out, objectMapper, token);
+                    logoutCommand.execute();
+                    token = null;
+                    break;
+                case "1":
+                    LogoutDTO logoutDTO = new LogoutDTO("teste", token);
+                    String json = objectMapper.writeValueAsString(logoutDTO);
+                    System.out.println("Client: " + json);
+                    out.println(json);
 
-            if(userInput.equals("1")) {
-                System.out.println("Digite o RA (somente números): ");
-                int ra = Integer.parseInt(stdIn.readLine());
+                    String responseServer = in.readLine();
+                    System.out.println(responseServer);
+                    break;
+                default:
+                    System.out.println("Operação inválida.");
             }
 
-            if(userInput.equals("0")) {
-                System.out.println("Realizando logout...");
-
-                LogoutDTO logoutDTO = new LogoutDTO("logout", token);
-                String json = objectMapper.writeValueAsString(logoutDTO);
-                System.out.println("Client: " + json);
-                out.println(json);
-
-                String responseServer = in.readLine();
-                System.out.println("Server: " + responseServer);
-
-                token = null;
+            if (token == null) {
                 break;
             }
 
             System.out.println("Digite a operacao: ");
             System.out.println("\t1 - escolher preferencias");
             System.out.println("\t0 - sair");
-            System.out.print ("input: ");
+            System.out.print("input: ");
         }
 
+//        stdIn.close();
+//        out.close();
+//        in.close();
+//        echoSocket.close();
+        encerrar(stdIn, out, in, echoSocket);
+    }
+
+
+    private static void encerrar(BufferedReader stdIn, PrintWriter out, BufferedReader in,Socket echoSocket) throws IOException {
+        System.out.println("Encerrando...");
+        stdIn.close();
         out.close();
         in.close();
-        stdIn.close();
         echoSocket.close();
     }
 }
