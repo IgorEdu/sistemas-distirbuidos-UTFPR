@@ -22,6 +22,7 @@ public class LogoutCommand implements Command {
     public void execute() throws IOException {
         System.out.println("Realizando logout...");
 
+//        LogoutDTO logoutDTO = new LogoutDTO("logout", null);
         LogoutDTO logoutDTO = new LogoutDTO("logout", token);
         String json = objectMapper.writeValueAsString(logoutDTO);
         System.out.println("Client: " + json);
