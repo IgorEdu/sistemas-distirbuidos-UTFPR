@@ -24,6 +24,17 @@ public class CadastroUsuarioFacade {
 
 
         try {
+            if (userService.isExistentUser(cadastroDTO)) {
+                responseDTO = responseService.createErrorResponse(
+                        cadastroDTO.getOperacao(),
+                        "Não foi cadastrar pois o usuario informado ja existe"
+                );
+
+                formattedResponse = responseFormatter.formatResponse(responseDTO);
+                System.out.println("Server (" + clientAddress + "): " + formattedResponse);
+                return formattedResponse;
+            }
+
             if (!userService.isValidRa(cadastroDTO) || !userService.isValidPassword(cadastroDTO) || !userService.isValidName(cadastroDTO)) {
 
                 System.out.println("RA valido: " + userService.isValidRa(cadastroDTO));
@@ -40,21 +51,10 @@ public class CadastroUsuarioFacade {
                 return formattedResponse;
             }
 
-            if (userService.isExistentUser(cadastroDTO)) {
-                responseDTO = responseService.createErrorResponse(
-                        cadastroDTO.getOperacao(),
-                        "Não foi cadastrar pois o usuario informado ja existe"
-                );
-
-                formattedResponse = responseFormatter.formatResponse(responseDTO);
-                System.out.println("Server (" + clientAddress + "): " + formattedResponse);
-                return formattedResponse;
-            }
-
             User user = cadastroDTO.toEntity();
             userService.registerUser(user);
 
-            responseDTO = responseService.createSuccessResponseWithMessage("Cadastro realizado com sucesso.");
+            responseDTO = responseService.createSuccessResponseWithMessage(cadastroDTO.getOperacao(),"Cadastro realizado com sucesso.");
             formattedResponse = responseFormatter.formatResponse(responseDTO);
             System.out.println("Server (" + clientAddress + "): " + formattedResponse);
         } catch (PersistenceException e) {
