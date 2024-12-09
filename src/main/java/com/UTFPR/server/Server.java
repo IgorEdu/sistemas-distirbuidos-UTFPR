@@ -91,7 +91,7 @@ public class Server extends Thread {
                 Command command = commandFactory.createCommand(operacaoDTO, inputLine, clientAddress);
                 CommandInvoker invoker = new CommandInvoker();
                 invoker.executeCommand(command);
-                if(operacaoDTO.getOperacao().equals("logout"))
+                if(operacaoDTO.getOperacao() != null && operacaoDTO.getOperacao().equals("logout"))
                     break;
             }
 
