@@ -29,7 +29,7 @@ public class LogoutCommand implements Command {
 
     @Override
     public void execute() throws IOException {
-        ResponseDTO responseDTO = responseService.createSuccessResponse();
+        ResponseDTO responseDTO = responseService.createSuccessResponse(this.logoutDTO.getOperacao());
 
         String response = responseFormatter.formatResponse(responseDTO);
         System.out.println("Server (" + clientAddress + "): " + response);
