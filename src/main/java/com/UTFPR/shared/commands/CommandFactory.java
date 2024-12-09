@@ -1,10 +1,7 @@
 package com.UTFPR.shared.commands;
 
 import com.UTFPR.domain.dto.*;
-import com.UTFPR.server.commands.CadastroUsuarioCommand;
-import com.UTFPR.server.commands.FallbackCommand;
-import com.UTFPR.server.commands.LoginCommand;
-import com.UTFPR.server.commands.LogoutCommand;
+import com.UTFPR.server.commands.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.UTFPR.server.service.ResponseFormatter;
 import com.UTFPR.server.service.ResponseService;
@@ -29,6 +26,13 @@ public class CommandFactory {
     public Command createCommand(OperacaoDTO operacaoDTO, String inputLine, String clientAddress) throws IOException {
 
         System.out.println("Client (" + clientAddress + "): " + inputLine);
+        if (operacaoDTO.getOperacao() == null) {
+            return new FallbackCommand(operacaoDTO.getOperacao(),
+                    "Operacao nao encontrada",
+                    out, responseService, responseFormatter
+            );
+        }
+
         switch (operacaoDTO.getOperacao()) {
             case "login":
                 LoginDTO loginDTO = null;
@@ -54,6 +58,10 @@ public class CommandFactory {
             case "logout":
                 LogoutDTO logoutDTO = new ObjectMapper().readValue(inputLine, LogoutDTO.class);
                 return new LogoutCommand(logoutDTO, userService, responseService, responseFormatter, out, clientAddress);
+            case "informacoesUsuario":
+//                System.out.println("testando informações");
+                SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO = new ObjectMapper().readValue(inputLine, SolicitaInformacoesUsuarioDTO.class);
+                return new InformacoesUsuarioCommand(solicitaInformacoesUsuarioDTO, userService, responseService, responseFormatter, out, clientAddress);
             default:
                 return new FallbackCommand(operacaoDTO.getOperacao(),
                         "Operacao nao encontrada",
