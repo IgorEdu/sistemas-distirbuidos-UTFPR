@@ -45,6 +45,16 @@ class UserServiceTest {
     }
 
     @Test
+    void testIsValidRa_InvalidWhenRaIsNull() {
+        CredentialProvider credentialProvider = mock(CredentialProvider.class);
+        when(credentialProvider.getRa()).thenReturn(null);
+
+        boolean result = userService.isValidRa(credentialProvider);
+
+        assertFalse(result, "Expected RA to be invalid");
+    }
+
+    @Test
     void testIsValidRa_BlankRa() {
         CredentialProvider credentialProvider = mock(CredentialProvider.class);
         when(credentialProvider.getRa()).thenReturn("");
@@ -77,7 +87,7 @@ class UserServiceTest {
     @Test
     void testIsValidPassword_ValidPassword() {
         CredentialProvider credentialProvider = mock(CredentialProvider.class);
-        when(credentialProvider.getSenha()).thenReturn("password123");
+        when(credentialProvider.getSenha()).thenReturn("passwordABC");
 
         boolean result = userService.isValidPassword(credentialProvider);
 
@@ -85,7 +95,27 @@ class UserServiceTest {
     }
 
     @Test
-    void testIsValidPassword_PasswordTooShort() {
+    void testIsValidPassword_InvalidWhenContainsNumbers() {
+        CredentialProvider credentialProvider = mock(CredentialProvider.class);
+        when(credentialProvider.getSenha()).thenReturn("password123");
+
+        boolean result = userService.isValidPassword(credentialProvider);
+
+        assertFalse(result, "Expected password to be invalid");
+    }
+
+    @Test
+    void testIsValidPassword_InvalidWhenContainsSpecialCharacters() {
+        CredentialProvider credentialProvider = mock(CredentialProvider.class);
+        when(credentialProvider.getSenha()).thenReturn("password!@#");
+
+        boolean result = userService.isValidPassword(credentialProvider);
+
+        assertFalse(result, "Expected password to be invalid");
+    }
+
+    @Test
+    void testIsValidPassword_InvalidWhenPasswordTooShort() {
         CredentialProvider credentialProvider = mock(CredentialProvider.class);
         when(credentialProvider.getSenha()).thenReturn("short12");
 
@@ -95,9 +125,19 @@ class UserServiceTest {
     }
 
     @Test
-    void testIsValidPassword_PasswordTooLong() {
+    void testIsValidPassword_InvalidWhenPasswordTooLong() {
         CredentialProvider credentialProvider = mock(CredentialProvider.class);
         when(credentialProvider.getSenha()).thenReturn("passwordtoolong123456");
+
+        boolean result = userService.isValidPassword(credentialProvider);
+
+        assertFalse(result, "Expected password to be invalid");
+    }
+
+    @Test
+    void testIsValidPassword_InvalidWhenPasswordIsNull() {
+        CredentialProvider credentialProvider = mock(CredentialProvider.class);
+        when(credentialProvider.getSenha()).thenReturn(null);
 
         boolean result = userService.isValidPassword(credentialProvider);
 
@@ -115,7 +155,17 @@ class UserServiceTest {
     }
 
     @Test
-    void testIsValidName_NameTooLong() {
+    void testIsValidName_InvalidWhenNameIsNull() {
+        CadastroDTO cadastroDTO = mock(CadastroDTO.class);
+        when(cadastroDTO.getNome()).thenReturn(null);
+
+        boolean result = userService.isValidName(cadastroDTO);
+
+        assertFalse(result, "Expected name to be invalid");
+    }
+
+    @Test
+    void testIsValidName_InvalidWhenNameTooLong() {
         CadastroDTO cadastroDTO = mock(CadastroDTO.class);
         when(cadastroDTO.getNome()).thenReturn("INVALID NAME IS TOO LONG FOR REGISTER INVALID NAME ");
 
@@ -125,7 +175,7 @@ class UserServiceTest {
     }
 
     @Test
-    void testIsValidName_ContainsSpecialCharacters() {
+    void testIsValidName_InvalidWhenNameContainsSpecialCharacters() {
         CadastroDTO cadastroDTO = mock(CadastroDTO.class);
         when(cadastroDTO.getNome()).thenReturn("INVALID NAME $$");
 
@@ -135,7 +185,7 @@ class UserServiceTest {
     }
 
     @Test
-    void testIsValidName_HasLowercaseLetters() {
+    void testIsValidName_InvalidWhenNameHasLowercaseLetters() {
         CadastroDTO cadastroDTO = mock(CadastroDTO.class);
         when(cadastroDTO.getNome()).thenReturn("Invalid Name");
 
