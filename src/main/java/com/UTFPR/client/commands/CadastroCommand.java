@@ -22,6 +22,7 @@ public class CadastroCommand implements Command {
     @Override
     public void execute() throws IOException {
         String ra;
+        String senha;
         do {
             System.out.println("Digite o RA (somente números): ");
             ra = stdIn.readLine();
@@ -29,12 +30,19 @@ public class CadastroCommand implements Command {
                 System.out.println("RA inválido. Digite novamente:");
             }
         } while (!ra.matches("^[0-9]+$"));
-        System.out.println("Digite a senha: ");
-        String senha = stdIn.readLine();
+        do {
+            System.out.println("Digite a senha: ");
+            senha = stdIn.readLine();
+            if (!senha.matches("^[a-zA-Z]+$")) {
+                System.out.println("Senha no mínimo 8 caracteres, e no máx 20 caracteres, apenas letras, sem acentuação ou caracter especial.");
+                System.out.println("Senha inválida. Digite novamente:");
+            }
+        } while(!senha.matches("^[a-zA-Z]+$"));
         System.out.println("Digite seu nome: ");
         String nome = stdIn.readLine();
 
         CadastroDTO cadastroDTO = new CadastroDTO("cadastrarUsuario", ra, senha, nome);
+
         String json = objectMapper.writeValueAsString(cadastroDTO);
         System.out.println("Client: " + json);
         out.println(json);
