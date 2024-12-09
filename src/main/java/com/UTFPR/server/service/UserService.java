@@ -17,21 +17,35 @@ public class UserService {
 
     public boolean isValidRa(CredentialProvider credentialProvider) {
         String ra = credentialProvider.getRa();
+
+        if(ra == null) return false;
+
         return ra.matches("^[0-9]+$") && ra.length() == 7;
     }
 
     public boolean isValidPassword(CredentialProvider credentialProvider) {
         String senha = credentialProvider.getSenha();
-        return senha.length() >= 8 && senha.length() <= 20;
+
+        if(senha == null) return false;
+
+        return senha.length() >= 8 && senha.length() <= 20 && senha.matches("^[a-zA-Z]+$");
     }
 
     public boolean isValidName(CadastroDTO cadastroDTO) {
         String nome = cadastroDTO.getNome();
+
+        if(nome == null) return false;
+
         return nome.length() <= 50 &&
                 nome.matches("^[A-Z\\s]+$");
     }
 
     public boolean isExistentUser(CredentialProvider credentialProvider) {
+        List<User> users = userRepository.findUserByRa(credentialProvider.getRa());
+        return !users.isEmpty();
+    }
+
+    public boolean isAuthenticate(CredentialProvider credentialProvider) {
         List<User> users = userRepository.findUserByRa(credentialProvider.getRa());
         return !users.isEmpty() && users.get(0).isSenha(credentialProvider.getSenha());
     }
@@ -49,5 +63,10 @@ public class UserService {
     public String generateRaToken(String ra) {
         List<User> users = userRepository.findUserByRa(ra);
         return users.isEmpty() ? null : users.get(0).getRa();
+    }
+
+    public User getUserByRa(String ra) {
+        List<User> users = userRepository.findUserByRa(ra);
+        return users.isEmpty() ? null : users.get(0);
     }
 }

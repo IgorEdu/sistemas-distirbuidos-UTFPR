@@ -36,7 +36,7 @@ public class LoginFacade {
                 return formattedResponse;
             }
 
-            if (!userService.isExistentUser(loginDTO)) {
+            if (!userService.isAuthenticate(loginDTO)) {
                 responseDTO = responseService.createErrorResponse(
                         loginDTO.getOperacao(),
                         "Credenciais incorretas."
@@ -49,7 +49,7 @@ public class LoginFacade {
 
 
             String token = userService.generateRaToken(loginDTO.getRa());
-            responseDTO = responseService.createSuccessResponseWithToken(token);
+            responseDTO = responseService.createSuccessResponseWithToken(loginDTO.getOperacao(), token);
             formattedResponse = responseFormatter.formatResponse(responseDTO);
             System.out.println("Server (" + clientAddress + "): " + formattedResponse);
         } catch (PersistenceException e) {
