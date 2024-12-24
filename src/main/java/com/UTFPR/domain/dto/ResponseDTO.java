@@ -10,6 +10,7 @@ public class ResponseDTO {
     private String operacao;
     private String mensagem;
     private String token;
+    private String usuario;
 
     public ResponseDTO() {
     }
@@ -43,6 +44,14 @@ public class ResponseDTO {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 }
 

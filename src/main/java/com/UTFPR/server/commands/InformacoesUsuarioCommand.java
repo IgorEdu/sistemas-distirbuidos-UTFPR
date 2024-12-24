@@ -12,6 +12,7 @@ import jakarta.persistence.PersistenceException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Objects;
 
 public class InformacoesUsuarioCommand implements Command {
     private SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO;
@@ -36,16 +37,27 @@ public class InformacoesUsuarioCommand implements Command {
         ResponseDTO responseDTO;
 
         try {
-            User user = userService.getUserByRa(solicitaInformacoesUsuarioDTO.getRa());
-
-            if(user.isAdmin() && !user.isSenha(solicitaInformacoesUsuarioDTO.getSenha())){
+            if(!Objects.equals(solicitaInformacoesUsuarioDTO.getRa(), solicitaInformacoesUsuarioDTO.getToken())){
                 responseDTO = responseService.createErrorResponse(
                         solicitaInformacoesUsuarioDTO.getOperacao(),
-                        "Credenciais incorretas."
+                        "Usuario nao autorizado"
                 );
-
                 formattedResponse = responseFormatter.formatResponse(responseDTO);
                 System.out.println("Server (" + clientAddress + "): " + formattedResponse);
+                out.println(formattedResponse);
+                return;
+            }
+
+            User user = userService.getUserByRa(solicitaInformacoesUsuarioDTO.getRa());
+
+            if(user == null) {
+                responseDTO = responseService.createErrorResponse(
+                        solicitaInformacoesUsuarioDTO.getOperacao(),
+                        "Usuario nao encontrado"
+                );
+                formattedResponse = responseFormatter.formatResponse(responseDTO);
+                System.out.println("Server (" + clientAddress + "): " + formattedResponse);
+                out.println(formattedResponse);
                 return;
             }
 
@@ -71,8 +83,6 @@ public class InformacoesUsuarioCommand implements Command {
             e.printStackTrace();
         }
 
-
-//        String response = loginFacade.handleLogin(loginDTO, clientAddress);
         out.println(formattedResponse);
     }
 }

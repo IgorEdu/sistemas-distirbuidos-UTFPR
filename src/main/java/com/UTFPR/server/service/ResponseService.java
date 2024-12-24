@@ -39,17 +39,17 @@ public class ResponseService {
     }
 
     public ResponseDTO returnSuccessResponseUserInformations(String operacao, User user) {
-        String message = String.format("""
-                {
-                    "nome": "%s",
-                    "ra": "%s"
-                }
-                """, user.getNome(), user.getRa());
+        String usuario   = String.format("""
+                usuario: {
+                    "ra": "%s",
+                    "senha": "%s",
+                    "nome": "%s"
+                }""", user.getRa(), user.getSenha() ,user.getNome());
 
         ResponseDTO response = new ResponseDTO();
         response.setStatus(200);
-        response.setMensagem(message);
-//        response.setOperacao(operacao);
+        response.setOperacao(operacao);
+        response.setUsuario(usuario);
         return response;
     }
 }

@@ -40,7 +40,7 @@ public class CommandFactory {
                     loginDTO = new ObjectMapper().readValue(inputLine, LoginDTO.class);
                     return new LoginCommand(loginDTO, userService, responseService, responseFormatter, out, clientAddress);
                 } catch (IOException e) {
-                    ResponseDTO responseDTO  = responseService.createErrorResponse("login", "Não foi possível ler o json recebido");
+                    ResponseDTO responseDTO = responseService.createErrorResponse("login", "Não foi possível ler o json recebido");
                     String response = responseFormatter.formatResponse(responseDTO);
                     System.out.println("Server (" + clientAddress + "): " + response);
                     out.println(response);
@@ -50,7 +50,7 @@ public class CommandFactory {
                     CadastroDTO cadastroDTO = new ObjectMapper().readValue(inputLine, CadastroDTO.class);
                     return new CadastroUsuarioCommand(cadastroDTO, userService, responseService, responseFormatter, out, clientAddress);
                 } catch (IOException e) {
-                    ResponseDTO responseDTO  = responseService.createErrorResponse("cadastrarUsuario", "Não foi possível ler o json recebido");
+                    ResponseDTO responseDTO = responseService.createErrorResponse("cadastrarUsuario", "Não foi possível ler o json recebido");
                     String response = responseFormatter.formatResponse(responseDTO);
                     System.out.println("Server (" + clientAddress + "): " + response);
                     out.println(response);
@@ -58,10 +58,26 @@ public class CommandFactory {
             case "logout":
                 LogoutDTO logoutDTO = new ObjectMapper().readValue(inputLine, LogoutDTO.class);
                 return new LogoutCommand(logoutDTO, userService, responseService, responseFormatter, out, clientAddress);
-            case "informacoesUsuario":
-//                System.out.println("testando informações");
-                SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO = new ObjectMapper().readValue(inputLine, SolicitaInformacoesUsuarioDTO.class);
-                return new InformacoesUsuarioCommand(solicitaInformacoesUsuarioDTO, userService, responseService, responseFormatter, out, clientAddress);
+            case "localizarUsuario":
+                try {
+                    SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO = new ObjectMapper().readValue(inputLine, SolicitaInformacoesUsuarioDTO.class);
+                    return new InformacoesUsuarioCommand(solicitaInformacoesUsuarioDTO, userService, responseService, responseFormatter, out, clientAddress);
+                } catch (IOException e) {
+                    ResponseDTO responseDTO = responseService.createErrorResponse("localizarUsuario", "Não foi possível ler o json recebido");
+                    String response = responseFormatter.formatResponse(responseDTO);
+                    System.out.println("Server (" + clientAddress + "): " + response);
+                    out.println(response);
+                }
+            case "excluirUsuario":
+                try {
+                    SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO = new ObjectMapper().readValue(inputLine, SolicitaInformacoesUsuarioDTO.class);
+                    return new InformacoesUsuarioCommand(solicitaInformacoesUsuarioDTO, userService, responseService, responseFormatter, out, clientAddress);
+                } catch (IOException e) {
+                    ResponseDTO responseDTO = responseService.createErrorResponse("excluirUsuario", "Não foi possível ler o json recebido");
+                    String response = responseFormatter.formatResponse(responseDTO);
+                    System.out.println("Server (" + clientAddress + "): " + response);
+                    out.println(response);
+                }
             default:
                 return new FallbackCommand(operacaoDTO.getOperacao(),
                         "Operacao nao encontrada",

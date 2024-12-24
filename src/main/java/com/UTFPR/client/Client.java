@@ -1,6 +1,7 @@
 package com.UTFPR.client;
 
 import com.UTFPR.client.commands.CadastroCommand;
+import com.UTFPR.client.commands.LocalizarUsuarioCommand;
 import com.UTFPR.client.commands.LoginCommand;
 import com.UTFPR.client.commands.LogoutCommand;
 import com.UTFPR.domain.dto.*;
@@ -97,38 +98,38 @@ public class Client {
             System.out.println("Usuário conectado...");
             System.out.println();
             System.out.println("Digite a operacao: ");
-            System.out.println("\t1 - escolher preferencias");
+            System.out.println("\t1 - localizar usuario");
             System.out.println("\t0 - sair");
             System.out.print("input: ");
         }
 
 
         while ((userInput = stdIn.readLine()) != null && token != null) {
+            Command command;
             switch (userInput) {
                 case "0":
-                    Command logoutCommand = new LogoutCommand(out, objectMapper, token);
-                    logoutCommand.execute();
+                    command = new LogoutCommand(out, objectMapper, token);
+                    command.execute();
                     token = null;
                     break;
                 case "1":
-                    LogoutDTO logoutDTO = new LogoutDTO("teste", token);
-                    String json = objectMapper.writeValueAsString(logoutDTO);
-                    System.out.println("Client: " + json);
-                    out.println(json);
-
-                    String responseServer = in.readLine();
-                    System.out.println(responseServer);
+                    command = new LocalizarUsuarioCommand(out, stdIn, objectMapper, token);
+                    command.execute();
                     break;
                 default:
                     System.out.println("Operação inválida.");
             }
+
+            String responseServer = in.readLine();
+            System.out.println("Server: " + responseServer);
 
             if (token == null) {
                 break;
             }
 
             System.out.println("Digite a operacao: ");
-            System.out.println("\t1 - escolher preferencias");
+            System.out.println("\t1 - informações do usuário");
+            System.out.println("\t2 - excluir usuário");
             System.out.println("\t0 - sair");
             System.out.print("input: ");
         }

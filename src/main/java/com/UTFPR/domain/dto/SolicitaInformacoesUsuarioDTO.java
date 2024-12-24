@@ -5,15 +5,15 @@ import com.UTFPR.domain.entities.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class SolicitaInformacoesUsuarioDTO implements CredentialProvider {
+public class SolicitaInformacoesUsuarioDTO {
     private String operacao;
+    private String token;
     private String ra;
-    private String senha;
 
-    public SolicitaInformacoesUsuarioDTO(String operacao, String ra, String senha) {
+    public SolicitaInformacoesUsuarioDTO(String operacao, String token, String ra) {
         this.operacao = operacao;
+        this.token = token;
         this.ra = ra;
-        this.senha = senha;
     }
 
     public SolicitaInformacoesUsuarioDTO() {
@@ -27,19 +27,19 @@ public class SolicitaInformacoesUsuarioDTO implements CredentialProvider {
         this.operacao = operacao;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     public String getRa() {
         return ra;
     }
 
     public void setRa(String ra) {
         this.ra = ra;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
     }
 }
