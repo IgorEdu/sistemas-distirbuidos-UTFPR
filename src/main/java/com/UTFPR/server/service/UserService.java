@@ -40,6 +40,13 @@ public class UserService {
                 nome.matches("^[A-Z\\s]+$");
     }
 
+    public boolean isValidName(String nome) {
+        if(nome == null) return false;
+
+        return nome.length() <= 50 &&
+                nome.matches("^[A-Z\\s]+$");
+    }
+
     public boolean isExistentUser(CredentialProvider credentialProvider) {
         List<User> users = userRepository.findUserByRa(credentialProvider.getRa());
         return !users.isEmpty();
@@ -68,5 +75,15 @@ public class UserService {
     public User getUserByRa(String ra) {
         List<User> users = userRepository.findUserByRa(ra);
         return users.isEmpty() ? null : users.get(0);
+    }
+
+    @Transactional
+    public void deleteUser(User user){
+        userRepository.deleteUser(user);
+    }
+
+    @Transactional
+    public void editUserById(Long id, User userEdited){
+        userRepository.editUserById(id, userEdited);
     }
 }

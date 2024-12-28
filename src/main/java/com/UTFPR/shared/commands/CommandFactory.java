@@ -71,9 +71,20 @@ public class CommandFactory {
             case "excluirUsuario":
                 try {
                     SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO = new ObjectMapper().readValue(inputLine, SolicitaInformacoesUsuarioDTO.class);
-                    return new InformacoesUsuarioCommand(solicitaInformacoesUsuarioDTO, userService, responseService, responseFormatter, out, clientAddress);
+                    return new ExcluirUsuarioCommand(solicitaInformacoesUsuarioDTO, userService, responseService, responseFormatter, out, clientAddress);
                 } catch (IOException e) {
                     ResponseDTO responseDTO = responseService.createErrorResponse("excluirUsuario", "Não foi possível ler o json recebido");
+                    String response = responseFormatter.formatResponse(responseDTO);
+                    System.out.println("Server (" + clientAddress + "): " + response);
+                    out.println(response);
+                }
+            case "editarUsuario":
+                try {
+                    EditaUsuarioDTO editaUsuarioDTO = new ObjectMapper().readValue(inputLine, EditaUsuarioDTO.class);
+                    System.out.println(editaUsuarioDTO.getUsuario().getRa());
+                    return new EditarUsuarioCommand(editaUsuarioDTO, userService, responseService, responseFormatter, out, clientAddress);
+                } catch (IOException e) {
+                    ResponseDTO responseDTO = responseService.createErrorResponse("editarUsuario", "Não foi possível ler o json recebido");
                     String response = responseFormatter.formatResponse(responseDTO);
                     System.out.println("Server (" + clientAddress + "): " + response);
                     out.println(response);
