@@ -1,20 +1,33 @@
 package com.UTFPR;
 
+import com.UTFPR.controller.ServerController;
+import com.UTFPR.controller.ServerOptionsController;
+import com.UTFPR.server.service.ServerService;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 public class Application extends javafx.application.Application {
     @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+    public void start(Stage stage) throws Exception {
+        ServerService serverService = new ServerService();
 
-        stage.setTitle("Conversor texto minúsculo para maiúsculo");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/server-view.fxml"));
+        Scene scene = new Scene(loader.load(), 500, 380);
+
+        ServerController controller = loader.getController();
+        controller.setServerService(serverService);
+
+        stage.setTitle("Comunicação via socket - SERVIDOR");
         stage.setScene(scene);
         stage.show();
+    }
+
+    @Override
+    public void stop() {
+        ServerService serverService = new ServerService();
+        serverService.stopServer();
+        System.out.println("Aplicação encerrada.");
     }
 
     public static void main(String[] args) {

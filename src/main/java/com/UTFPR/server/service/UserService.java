@@ -77,6 +77,11 @@ public class UserService {
         return users.isEmpty() ? null : users.get(0);
     }
 
+    public boolean isAdminByToken(String token){
+        List<User> users = userRepository.findUserByRa(token);
+        return !users.isEmpty() && users.get(0).isAdmin();
+    }
+
     @Transactional
     public void deleteUser(User user){
         userRepository.deleteUser(user);

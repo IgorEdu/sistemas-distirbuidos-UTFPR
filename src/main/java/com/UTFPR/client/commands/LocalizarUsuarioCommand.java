@@ -33,7 +33,7 @@ public class LocalizarUsuarioCommand implements Command {
             }
         } while (!ra.matches("^[0-9]+$"));
 
-        SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO = new SolicitaInformacoesUsuarioDTO("localizarUsuario", ra, token);
+        SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO = new SolicitaInformacoesUsuarioDTO("localizarUsuario", token, ra);
 
         String json = objectMapper.writeValueAsString(solicitaInformacoesUsuarioDTO);
         System.out.println("Client: " + json);

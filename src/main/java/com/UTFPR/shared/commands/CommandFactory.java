@@ -81,7 +81,7 @@ public class CommandFactory {
             case "editarUsuario":
                 try {
                     EditaUsuarioDTO editaUsuarioDTO = new ObjectMapper().readValue(inputLine, EditaUsuarioDTO.class);
-                    System.out.println(editaUsuarioDTO.getUsuario().getRa());
+                    System.out.println(editaUsuarioDTO.getUsuarioDTO().getRa());
                     return new EditarUsuarioCommand(editaUsuarioDTO, userService, responseService, responseFormatter, out, clientAddress);
                 } catch (IOException e) {
                     ResponseDTO responseDTO = responseService.createErrorResponse("editarUsuario", "Não foi possível ler o json recebido");

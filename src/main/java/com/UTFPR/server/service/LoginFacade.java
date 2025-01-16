@@ -3,10 +3,8 @@ package com.UTFPR.server.service;
 import com.UTFPR.domain.dto.LoginDTO;
 import com.UTFPR.domain.dto.ResponseDTO;
 import jakarta.persistence.PersistenceException;
-import org.hibernate.JDBCException;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 public class LoginFacade {
     private final UserService userService;

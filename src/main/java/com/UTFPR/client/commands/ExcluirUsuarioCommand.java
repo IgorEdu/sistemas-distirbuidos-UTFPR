@@ -32,7 +32,7 @@ public class ExcluirUsuarioCommand implements Command {
             }
         } while (!ra.matches("^[0-9]+$"));
 
-        SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO = new SolicitaInformacoesUsuarioDTO("excluirUsuario", ra, token);
+        SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO = new SolicitaInformacoesUsuarioDTO("excluirUsuario", token, ra);
 
         String json = objectMapper.writeValueAsString(solicitaInformacoesUsuarioDTO);
         System.out.println("Client: " + json);

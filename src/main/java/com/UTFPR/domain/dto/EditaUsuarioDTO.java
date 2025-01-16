@@ -2,18 +2,25 @@ package com.UTFPR.domain.dto;
 
 import com.UTFPR.domain.contracts.CredentialProvider;
 import com.UTFPR.domain.entities.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class EditaUsuarioDTO implements CredentialProvider {
     private String operacao;
     private String token;
-    private User usuario;
+    private UsuarioDTO usuarioDTO;
 
     public EditaUsuarioDTO(String operacao, String token, User usuario) {
         this.operacao = operacao;
         this.token = token;
-        this.usuario = usuario;
+        this.usuarioDTO = new UsuarioDTO(usuario.getRa(), usuario.getSenha(), usuario.getNome());
+    }
+
+    public EditaUsuarioDTO(String operacao, String token, UsuarioDTO usuarioDTO) {
+        this.operacao = operacao;
+        this.token = token;
+        this.usuarioDTO = usuarioDTO;
     }
 
     public EditaUsuarioDTO() {
@@ -35,21 +42,23 @@ public class EditaUsuarioDTO implements CredentialProvider {
         this.token = token;
     }
 
-    public User getUsuario() {
-        return usuario;
+    public UsuarioDTO getUsuarioDTO() {
+        return usuarioDTO;
     }
 
     public void setUsuario(User usuario) {
-        this.usuario = usuario;
+        this.usuarioDTO = new UsuarioDTO(usuario.getRa(), usuario.getSenha(), usuario.getNome());
     }
 
     @Override
+    @JsonIgnore
     public String getRa() {
-        return usuario.getRa();
+        return usuarioDTO.getRa();
     }
 
     @Override
+    @JsonIgnore
     public String getSenha() {
-        return usuario.getSenha();
+        return usuarioDTO.getSenha();
     }
 }

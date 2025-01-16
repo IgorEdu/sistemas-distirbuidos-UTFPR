@@ -36,7 +36,7 @@ public class ExcluirUsuarioCommand implements Command {
         ResponseDTO responseDTO;
 
         try {
-            if(!Objects.equals(solicitaInformacoesUsuarioDTO.getRa(), solicitaInformacoesUsuarioDTO.getToken())){
+            if(!Objects.equals(solicitaInformacoesUsuarioDTO.getRa(), solicitaInformacoesUsuarioDTO.getToken()) && !userService.isAdminByToken(solicitaInformacoesUsuarioDTO.getToken())){
                 responseDTO = responseService.createErrorResponse(
                         solicitaInformacoesUsuarioDTO.getOperacao(),
                         "Usuario nao autorizado"

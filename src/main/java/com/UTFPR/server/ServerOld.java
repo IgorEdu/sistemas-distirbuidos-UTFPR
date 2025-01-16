@@ -2,31 +2,74 @@ package com.UTFPR.server;
 
 import com.UTFPR.domain.dto.OperacaoDTO;
 import com.UTFPR.server.commands.CommandInvoker;
+import com.UTFPR.server.infra.AdminInitializer;
 import com.UTFPR.server.infra.DatabaseConnection;
 import com.UTFPR.server.repository.UserRepository;
 import com.UTFPR.server.service.ResponseFormatter;
 import com.UTFPR.server.service.ResponseService;
-import com.UTFPR.server.service.ServerService;
 import com.UTFPR.server.service.UserService;
 import com.UTFPR.shared.commands.Command;
 import com.UTFPR.shared.commands.CommandFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
-import javafx.application.Platform;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
-public class Server extends Thread {
-    private final Socket clientSocket;
-    private List<String> usuariosLogados;
+public class ServerOld extends Thread {
+    protected Socket clientSocket;
 
-    public Server(Socket clientSocket) {
-        this.clientSocket = clientSocket;
-        this.usuariosLogados = new ArrayList<>();
+    public static void main(String[] args) {
+        int portServer = 20001;  // Porta padrão
+//        int portServer = PortConfiguration.getPort();
+
+        DatabaseConnection.init();
+
+        try (ServerSocket serverSocket = configureServerSocket(args)) {
+            System.out.println("Servidor iniciado na porta: " + portServer);
+
+            try (EntityManager em = DatabaseConnection.getEntityManager()) {
+                AdminInitializer.initializeAdmin(em);
+            } catch (Exception e) {
+                System.err.println("Erro ao inicializar administrador: " + e.getMessage());
+                e.printStackTrace();
+            }
+
+            while (true) {
+                System.out.println("Aguardando conexão...");
+                new ServerOld(serverSocket.accept());
+            }
+        } catch (IOException e) {
+            System.err.println("Erro ao inicializar servidor: " + e.getMessage());
+        } finally {
+            DatabaseConnection.close();
+        }
+    }
+
+    private ServerOld(Socket clientSoc) {
+        clientSocket = clientSoc;
         start();
+    }
+
+    private static ServerSocket configureServerSocket(String[] args) throws IOException {
+        int portServer = 20001;  // Porta padrão
+
+        if (args.length > 0) {
+            portServer = Integer.parseInt(args[0]);
+        } else {
+            System.out.println("Digite a porta (ou pressione Enter para usar a porta padrão 20001): ");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String portInput = br.readLine();
+            if (!portInput.isEmpty()) {
+                portServer = Integer.parseInt(portInput);
+            }
+        }
+
+        return new ServerSocket(portServer);
     }
 
     @Override
@@ -73,34 +116,4 @@ public class Server extends Thread {
             }
         }
     }
-
-//    @Override
-//    public void run() {
-//        System.out.println("Nova conexão aceita de: " + clientSocket.getInetAddress());
-//
-//        try (
-//                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-//                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)
-//        ) {
-//            String inputLine;
-//            while ((inputLine = in.readLine()) != null) {
-//                System.out.println("Mensagem recebida: " + inputLine);
-//                out.println("Echo: " + inputLine);
-//
-//                if ("exit".equalsIgnoreCase(inputLine)) {
-//                    break;
-//                }
-//            }
-//        } catch (IOException e) {
-//            System.err.println("Erro durante comunicação com o cliente: " + e.getMessage());
-//        } finally {
-//            try {
-//                clientSocket.close();
-//            } catch (IOException e) {
-//                System.err.println("Erro ao fechar conexão: " + e.getMessage());
-//            }
-//        }
-//
-//        System.out.println("Conexão encerrada com: " + clientSocket.getInetAddress());
-//    }
 }
