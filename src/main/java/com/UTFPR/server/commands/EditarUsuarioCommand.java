@@ -37,7 +37,7 @@ public class EditarUsuarioCommand implements Command {
         ResponseDTO responseDTO;
 
         try {
-            if (!Objects.equals(editaUsuarioDTO.getUsuarioDTO().getRa(), editaUsuarioDTO.getToken())) {
+            if (!Objects.equals(editaUsuarioDTO.getUsuarioDTO().getRa(), editaUsuarioDTO.getToken()) && !userService.isAdminByToken(editaUsuarioDTO.getToken())) {
                 responseDTO = responseService.createErrorResponse(
                         editaUsuarioDTO.getOperacao(),
                         "Usuario nao autorizado"
