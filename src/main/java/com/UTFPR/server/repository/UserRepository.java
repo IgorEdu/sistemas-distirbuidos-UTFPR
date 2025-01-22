@@ -63,4 +63,12 @@ public class UserRepository {
         }
     }
 
+    public List<User> findAll() {
+        try {
+            TypedQuery<User> query = em.createQuery("SELECT u FROM usuarios u", User.class);
+            return query.getResultList();
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }

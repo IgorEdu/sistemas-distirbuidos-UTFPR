@@ -1,6 +1,9 @@
 package com.UTFPR.controller;
 
+import com.UTFPR.server.infra.DatabaseConnection;
+import com.UTFPR.server.repository.UserRepository;
 import com.UTFPR.server.service.ServerService;
+import com.UTFPR.server.service.UserService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,13 +11,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ServerController {
     @FXML
@@ -43,6 +43,13 @@ public class ServerController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/optionsServer.fxml"));
             Parent nextSceneRoot = loader.load();
 
+            startClient(porta);
+
+            ServerOptionsController controller = loader.getController();
+
+            // Inicializa o UserService no controlador
+            controller.setUserService(new UserService(new UserRepository(DatabaseConnection.getEntityManager())));
+
             // Obter o controlador da nova tela
             ServerOptionsController optionsController = loader.getController();
             optionsController.setPortaServidor(porta);
@@ -68,6 +75,24 @@ public class ServerController {
 
     public void setServerService(ServerService serverService) {
         this.serverService = serverService;
+    }
+
+    private void startClient(int port) {
+        Thread clientThread = new Thread(() -> {
+            try {
+                String serverIP = "127.0.0.1";
+                int serverPort = port;
+//                String token = "999999";
+
+                com.UTFPR.client.Client.main(new String[]{serverIP, String.valueOf(serverPort)});
+            } catch (Exception e) {
+                System.err.println("Erro ao iniciar o cliente: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
+
+        clientThread.setDaemon(true); // Define a thread como daemon para encerrar com a aplicação
+        clientThread.start();
     }
 
 }

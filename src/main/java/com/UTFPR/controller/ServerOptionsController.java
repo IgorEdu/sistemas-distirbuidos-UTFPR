@@ -1,8 +1,15 @@
 package com.UTFPR.controller;
 
+import com.UTFPR.domain.entities.User;
+import com.UTFPR.server.service.UserService;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class ServerOptionsController {
 
@@ -10,17 +17,55 @@ public class ServerOptionsController {
     private Label lblPortaServidor;
 
     @FXML
-    private static ListView<String> listViewUsuarios;
+    private ListView<String> listViewUsuarios;
 
-    public void setPortaServidor(int porta) {
-        lblPortaServidor.setText("Servidor iniciado na porta: " + porta);
+    @FXML
+    private TableView<User> tableViewUsuariosCadastrados;
+
+    @FXML
+    private void onListarUsuarios() {
+        listarUsuarios();
     }
 
-    public static void atualizarListaUsuarios(String usuario) {
+
+    private UserService userService;
+
+    public void setPortaServidor(int porta) {
+        lblPortaServidor.setText(String.valueOf(porta));
+    }
+
+    public void atualizarListaUsuarios(String usuario) {
         listViewUsuarios.getItems().add(usuario);
     }
 
-    public static void removerUsuario(String usuario) {
+    public void removerUsuario(String usuario) {
         listViewUsuarios.getItems().remove(usuario);
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @FXML
+    private TableColumn<User, String> colunaRa;
+
+    @FXML
+    private TableColumn<User, String> colunaNome;
+
+
+    @FXML
+    private void initialize() {
+        colunaRa.setCellValueFactory(new PropertyValueFactory<>("ra"));
+        colunaNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+    }
+
+
+    private void listarUsuarios() {
+        ObservableList<User> usuarios = FXCollections.observableArrayList();
+
+        if(userService != null){
+            usuarios.addAll(userService.getAllUsers());
+            tableViewUsuariosCadastrados.setItems(usuarios);
+        }
     }
 }

@@ -2,6 +2,9 @@ package com.UTFPR.shared.commands;
 
 import com.UTFPR.domain.dto.*;
 import com.UTFPR.server.commands.*;
+import com.UTFPR.server.infra.DatabaseConnection;
+import com.UTFPR.server.repository.CategoryRepository;
+import com.UTFPR.server.service.CategoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.UTFPR.server.service.ResponseFormatter;
 import com.UTFPR.server.service.ResponseService;
@@ -12,12 +15,14 @@ import java.io.PrintWriter;
 
 public class CommandFactory {
     private UserService userService;
+    private CategoryService categoryService;
     private ResponseService responseService;
     private ResponseFormatter responseFormatter;
     private PrintWriter out;
 
     public CommandFactory(UserService userService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out) {
         this.userService = userService;
+        this.categoryService = new CategoryService(new CategoryRepository(DatabaseConnection.getEntityManager()));
         this.responseService = responseService;
         this.responseFormatter = responseFormatter;
         this.out = out;
@@ -68,6 +73,16 @@ public class CommandFactory {
                     System.out.println("Server (" + clientAddress + "): " + response);
                     out.println(response);
                 }
+            case "listarUsuarios":
+                try {
+                    OperacaoComTokenDTO operacaoComTokenDTO = new ObjectMapper().readValue(inputLine, OperacaoComTokenDTO.class);
+                    return new ListarUsuariosCommand(operacaoComTokenDTO, userService, responseService, responseFormatter, out, clientAddress);
+                } catch (IOException e) {
+                    ResponseDTO responseDTO = responseService.createErrorResponse("listarUsuarios", "Não foi possível ler o json recebido");
+                    String response = responseFormatter.formatResponse(responseDTO);
+                    System.out.println("Server (" + clientAddress + "): " + response);
+                    out.println(response);
+                }
             case "excluirUsuario":
                 try {
                     SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO = new ObjectMapper().readValue(inputLine, SolicitaInformacoesUsuarioDTO.class);
@@ -85,6 +100,46 @@ public class CommandFactory {
                     return new EditarUsuarioCommand(editaUsuarioDTO, userService, responseService, responseFormatter, out, clientAddress);
                 } catch (IOException e) {
                     ResponseDTO responseDTO = responseService.createErrorResponse("editarUsuario", "Não foi possível ler o json recebido");
+                    String response = responseFormatter.formatResponse(responseDTO);
+                    System.out.println("Server (" + clientAddress + "): " + response);
+                    out.println(response);
+                }
+            case "salvarCategoria":
+                try {
+                    SalvarCategoriaDTO salvarCategoriaDTO = new ObjectMapper().readValue(inputLine, SalvarCategoriaDTO.class);
+                    return new SalvarCategoriaCommand(salvarCategoriaDTO, userService, categoryService, responseService, responseFormatter, out, clientAddress);
+                } catch (IOException e) {
+                    ResponseDTO responseDTO = responseService.createErrorResponse("salvarCategoria", "Não foi possível ler o json recebido");
+                    String response = responseFormatter.formatResponse(responseDTO);
+                    System.out.println("Server (" + clientAddress + "): " + response);
+                    out.println(response);
+                }
+            case "listarCategorias":
+                try {
+                    OperacaoComTokenDTO operacaoComTokenDTO = new ObjectMapper().readValue(inputLine, OperacaoComTokenDTO.class);
+                    return new ListarCategoriasCommand(operacaoComTokenDTO, userService, categoryService, responseService, responseFormatter, out, clientAddress);
+                } catch (IOException e) {
+                    ResponseDTO responseDTO = responseService.createErrorResponse("listarCategorias", "Não foi possível ler o json recebido");
+                    String response = responseFormatter.formatResponse(responseDTO);
+                    System.out.println("Server (" + clientAddress + "): " + response);
+                    out.println(response);
+                }
+            case "localizarCategoria":
+                try {
+                    SolicitaInformacoesCategoriaDTO solicitaInformacoesCategoriaDTO = new ObjectMapper().readValue(inputLine, SolicitaInformacoesCategoriaDTO.class);
+                    return new InformacoesCategoriaCommand(solicitaInformacoesCategoriaDTO, categoryService, responseService, responseFormatter, out, clientAddress);
+                } catch (IOException e) {
+                    ResponseDTO responseDTO = responseService.createErrorResponse("localizarCategoria", "Não foi possível ler o json recebido");
+                    String response = responseFormatter.formatResponse(responseDTO);
+                    System.out.println("Server (" + clientAddress + "): " + response);
+                    out.println(response);
+                }
+            case "excluirCategoria":
+                try {
+                    SolicitaInformacoesCategoriaDTO solicitaInformacoesCategoriaDTO = new ObjectMapper().readValue(inputLine, SolicitaInformacoesCategoriaDTO.class);
+                    return new ExcluirCategoriaCommand(solicitaInformacoesCategoriaDTO, userService, categoryService, responseService, responseFormatter, out, clientAddress);
+                } catch (IOException e) {
+                    ResponseDTO responseDTO = responseService.createErrorResponse("excluirCategoria", "Não foi possível ler o json recebido");
                     String response = responseFormatter.formatResponse(responseDTO);
                     System.out.println("Server (" + clientAddress + "): " + response);
                     out.println(response);

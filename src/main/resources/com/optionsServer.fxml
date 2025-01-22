@@ -1,25 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.UTFPR.controller.ServerOptionsController">
+<AnchorPane prefHeight="584.0" prefWidth="703.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.UTFPR.controller.ServerOptionsController">
    <children>
-      <TabPane layoutY="33.0" prefHeight="347.0" prefWidth="500.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane layoutY="33.0" prefHeight="551.0" prefWidth="703.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab id="tabPrimaria" text="Untitled Tab 1">
+          <Tab id="tabSecundaria" text="Usuários conectados">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ListView fx:id="listViewUsuarios" layoutX="14.0" layoutY="14.0" prefHeight="487.0" prefWidth="678.0" />
+                     </children></AnchorPane>
             </content>
           </Tab>
-          <Tab id="tabSecundaria" text="Untitled Tab 2">
+          <Tab id="tabPrimaria" text="Usuários cadastrados">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="btnListarUsuarios" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Listar Usuários" onAction="#onListarUsuarios" />
+                        <TableView fx:id="tableViewUsuariosCadastrados" layoutX="14.0" layoutY="54.0" prefHeight="440.0" prefWidth="678.0">
+                          <columns>
+                              <TableColumn fx:id="colunaRa" text="RA" />
+                              <TableColumn fx:id="colunaNome" text="Nome" />
+                          </columns>
+                        </TableView>
+                     </children></AnchorPane>
             </content>
           </Tab>
         </tabs>
       </TabPane>
       <Label fx:id="lblServidorIniciado" layoutX="6.0" layoutY="4.0" prefHeight="28.0" prefWidth="187.0" text="Servidor iniciado na porta: " />
-      <Label fx:id="lblPortaServidor" layoutX="193.0" layoutY="4.0" prefHeight="28.0" prefWidth="187.0"  text="1234"/>
+      <Label fx:id="lblPortaServidor" layoutX="193.0" layoutY="4.0" prefHeight="28.0" prefWidth="187.0" text="1234" />
    </children>
 </AnchorPane>

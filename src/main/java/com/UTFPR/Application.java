@@ -1,7 +1,6 @@
 package com.UTFPR;
 
 import com.UTFPR.controller.ServerController;
-import com.UTFPR.controller.ServerOptionsController;
 import com.UTFPR.server.service.ServerService;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,8 +14,9 @@ public class Application extends javafx.application.Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/server-view.fxml"));
         Scene scene = new Scene(loader.load(), 500, 380);
 
-        ServerController controller = loader.getController();
-        controller.setServerService(serverService);
+        ServerController serverController = loader.getController();
+        serverController.setServerService(serverService);
+
 
         stage.setTitle("Comunicação via socket - SERVIDOR");
         stage.setScene(scene);

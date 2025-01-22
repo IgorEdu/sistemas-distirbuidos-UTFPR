@@ -77,6 +77,11 @@ public class UserService {
         return users.isEmpty() ? null : users.get(0);
     }
 
+    public List<User> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.isEmpty() ? null : users;
+    }
+
     public boolean isAdminByToken(String token){
         List<User> users = userRepository.findUserByRa(token);
         return !users.isEmpty() && users.get(0).isAdmin();

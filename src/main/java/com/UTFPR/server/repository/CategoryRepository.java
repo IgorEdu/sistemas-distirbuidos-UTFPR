@@ -39,7 +39,7 @@ public class CategoryRepository {
         em.getTransaction().commit();
     }
 
-    public void deleteUser(Category category) {
+    public void deleteCategory(Category category) {
         em.getTransaction().begin();
         em.remove(category);
         em.flush();
@@ -67,5 +67,15 @@ public class CategoryRepository {
             throw e;
         }
     }
+
+//    public List<Category> isPresentOnWarning(Long id) {
+//        try {
+//            TypedQuery<Category> query = em.createQuery("SELECT c FROM categorias c WHERE c.id = :id", Category.class);
+//            query.setParameter("id", id);
+//            return query.getResultList();
+//        } catch (Exception e) {
+//            throw e;
+//        }
+//    }
 
 }

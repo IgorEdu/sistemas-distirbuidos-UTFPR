@@ -2,14 +2,14 @@ package com.UTFPR.domain.entities;
 
 import jakarta.persistence.*;
 
-@Entity(name = "categoria")
+@Entity(name = "categorias")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     private String nome;
 
-    public Category(String nome) {
+    public Category(long id, String nome) {
         this.nome = nome;
     }
 
