@@ -44,11 +44,11 @@ public class CadastroCommand implements Command {
         do {
             System.out.println("Digite seu nome: ");
             nome = stdIn.readLine();
-            if (!nome.matches("^[A-Z]+$") || nome.length() > 50) {
+            if (!nome.matches("^[A-Z\\s]+$") || nome.length() > 50) {
                 System.out.println("Nome no máximo 50 caracteres, apenas letras maiúsculas, sem acentuação ou caracter especial.");
                 System.out.println("Nome inválido. Digite novamente:");
             }
-        } while(!nome.matches("^[A-Z]+$") || nome.length() > 50);
+        } while(!nome.matches("^[A-Z\\s]+$") || nome.length() > 50);
 
         CadastroDTO cadastroDTO = new CadastroDTO("cadastrarUsuario", ra, senha, nome);
 
