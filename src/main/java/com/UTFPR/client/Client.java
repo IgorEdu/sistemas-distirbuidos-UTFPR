@@ -18,7 +18,7 @@ public class Client {
         int serverPort;
         String token = null;
 
-        if(args.length == 0) {
+        if (args.length == 0) {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
             System.out.println("Digite o IP do servidor: ");
@@ -26,7 +26,7 @@ public class Client {
 
             System.out.println("Digite a porta do servidor: ");
             serverPort = Integer.parseInt(br.readLine());
-        } else{
+        } else {
             serverIP = args[0];
             serverPort = Integer.parseInt(args[1]);
 //            token = args[2];
@@ -58,92 +58,103 @@ public class Client {
                 new InputStreamReader(System.in));
         String userInput;
 
+        String raUsuarioExcluido = null;
 
-        token = menuInicial(stdIn, token, in, out, serverSocket, objectMapper);
-
-        System.out.println("Usuário conectado...");
-        System.out.println();
-
-        if (token != null) {
-            apresentarMenu(token);
-        }
-
-
-        while ((userInput = stdIn.readLine()) != null && token != null) {
-            Command command;
-            switch (userInput) {
-                case "0":
-                    command = new LogoutCommand(out, objectMapper, token);
-                    command.execute();
-                    token = null;
-                    break;
-                case "1":
-                    command = new LocalizarUsuarioCommand(out, stdIn, objectMapper, token);
-                    command.execute();
-                    break;
-                case "2":
-                    command = new ExcluirUsuarioCommand(out, stdIn, objectMapper, token);
-                    command.execute();
-                    break;
-                case "3":
-                    command = new EditarUsuarioCommand(out, stdIn, objectMapper, token);
-                    command.execute();
-                    break;
-                case "4":
-                    command = new ListarCategoriasCommand(out, stdIn, objectMapper, token);
-                    command.execute();
-                    break;
-                case "5":
-                    command = new LocalizarCategoriaCommand(out, stdIn, objectMapper, token);
-                    command.execute();
-                    break;
-                case "a1":
-                    command = new ListarUsuariosCommand(out, stdIn, objectMapper, token);
-                    command.execute();
-                    break;
-                case "a2":
-                    command = new SalvarCategoriaCommand(out, stdIn, objectMapper, token);
-                    command.execute();
-                    break;
-                case "a3":
-                    command = new ExcluirCategoriaCommand(out, stdIn, objectMapper, token);
-                    command.execute();
-                    break;
-                default:
-                    System.out.println("Operação inválida.");
-            }
-
-            String responseServer = in.readLine();
-            System.out.println("Server: " + responseServer);
+        do {
+            token = menuInicial(stdIn, token, in, out, serverSocket, objectMapper);
 
             if (token == null) {
                 break;
             }
-        }
+
+            System.out.println("Usuário conectado...");
+            System.out.println();
+            apresentarMenu(token);
+
+            while ((userInput = stdIn.readLine()) != null && token != null) {
+                Command command;
+                switch (userInput) {
+                    case "0":
+                        command = new LogoutCommand(out, objectMapper, token);
+                        command.execute();
+                        token = null;
+                        break;
+                    case "1":
+                        command = new LocalizarUsuarioCommand(out, stdIn, objectMapper, token);
+                        command.execute();
+                        break;
+                    case "2":
+                        ExcluirUsuarioCommand excluirUsuarioCommand = new ExcluirUsuarioCommand(out, stdIn, objectMapper, token);
+                        excluirUsuarioCommand.execute();
+                        raUsuarioExcluido = excluirUsuarioCommand.getRaExclusao();
+                        break;
+                    case "3":
+                        command = new EditarUsuarioCommand(out, stdIn, objectMapper, token);
+                        command.execute();
+                        break;
+                    case "4":
+                        command = new ListarCategoriasCommand(out, stdIn, objectMapper, token);
+                        command.execute();
+                        break;
+                    case "5":
+                        command = new LocalizarCategoriaCommand(out, stdIn, objectMapper, token);
+                        command.execute();
+                        break;
+                    case "a1":
+                        command = new ListarUsuariosCommand(out, stdIn, objectMapper, token);
+                        command.execute();
+                        break;
+                    case "a2":
+                        command = new SalvarCategoriaCommand(out, stdIn, objectMapper, token);
+                        command.execute();
+                        break;
+                    case "a3":
+                        command = new ExcluirCategoriaCommand(out, stdIn, objectMapper, token);
+                        command.execute();
+                        break;
+                    default:
+                        System.out.println("Operação inválida.");
+                }
+
+                String responseServer = in.readLine();
+                System.out.println("Server: " + responseServer);
+
+                ResponseDTO responseDTO = objectMapper.readValue(responseServer, ResponseDTO.class);
+                if(responseDTO.getStatus() == 201 && responseDTO.getOperacao().equals("excluirUsuario") && raUsuarioExcluido.equals(token)){
+                    token = null;
+                }
+
+                if (token == null) {
+                    break;
+                }
+
+                apresentarMenu(token);
+            }
+
 
 //        stdIn.close();
 //        out.close();
 //        in.close();
 //        serverSocket.close();
 //        encerrar(stdIn, out, in, serverSocket);
-        token = menuInicial(stdIn, token, in, out, serverSocket, objectMapper);
+        } while (token == null);
     }
 
 
-    private static void encerrar(BufferedReader stdIn, PrintWriter out, BufferedReader in,Socket echoSocket) throws IOException {
+    private static void encerrar(BufferedReader stdIn, PrintWriter out, BufferedReader in, Socket echoSocket) throws IOException {
         System.out.println("Encerrando...");
         stdIn.close();
         out.close();
-        in.close();
+//        in.close();
         echoSocket.close();
     }
 
     private static String menuInicial(BufferedReader stdIn,
-                                    String token,
-                                    BufferedReader in,
-                                    PrintWriter out,
-                                    Socket serverSocket,
-                                    ObjectMapper objectMapper) throws IOException {
+                                      String token,
+                                      BufferedReader in,
+                                      PrintWriter out,
+                                      Socket serverSocket,
+                                      ObjectMapper objectMapper) throws IOException {
         String userInput;
 
         System.out.println("Digite a operacao: ");
@@ -190,7 +201,7 @@ public class Client {
         return token;
     }
 
-    private static void apresentarMenu(String token){
+    private static void apresentarMenu(String token) {
         System.out.println("Digite a operacao: ");
         System.out.println("\t1 - localizar usuario");
         System.out.println("\t2 - excluir usuário");
@@ -198,7 +209,7 @@ public class Client {
         System.out.println("\t4 - listar categorias");
         System.out.println("\t5 - localizar categoria");
 
-        if(token.equals("9999999")){
+        if (token.equals("9999999")) {
             System.out.println("-----------------------------");
             System.out.println("FUNÇÕES DE ADMINISTRADOR");
             System.out.println("-----------------------------");
