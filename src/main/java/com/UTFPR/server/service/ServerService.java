@@ -1,16 +1,13 @@
 package com.UTFPR.server.service;
 
-import com.UTFPR.controller.ServerOptionsController;
 import com.UTFPR.domain.dto.OperacaoDTO;
 import com.UTFPR.server.commands.CommandInvoker;
 import com.UTFPR.server.infra.AdminInitializer;
 import com.UTFPR.server.infra.DatabaseConnection;
-import com.UTFPR.server.repository.CategoryRepository;
 import com.UTFPR.server.repository.UserRepository;
 import com.UTFPR.shared.commands.CommandFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
@@ -107,9 +104,9 @@ public class ServerService {
                                         .createCommand(operacaoDTO, inputLine, clientSocket.getInetAddress().toString())
                         );
 
-                        if ("logout".equals(operacaoDTO.getOperacao())) {
-                            break;
-                        }
+//                        if ("logout".equals(operacaoDTO.getOperacao())) {
+//                            break;
+//                        }
                     }
                 } catch (Exception e) {
                     System.err.println("Erro durante comunicação com o cliente: " + e.getMessage());
