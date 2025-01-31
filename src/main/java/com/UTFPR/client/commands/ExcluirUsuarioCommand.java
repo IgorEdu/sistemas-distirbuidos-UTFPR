@@ -12,13 +12,19 @@ public class ExcluirUsuarioCommand implements Command {
     private PrintWriter out;
     private BufferedReader stdIn;
     private ObjectMapper objectMapper;
-    private final String token;
+    private String token;
+    private String raExclusao;
+
 
     public ExcluirUsuarioCommand(PrintWriter out, BufferedReader stdIn, ObjectMapper objectMapper, String token) {
         this.out = out;
         this.stdIn = stdIn;
         this.objectMapper = objectMapper;
         this.token = token;
+    }
+
+    public String getRaExclusao(){
+        return raExclusao;
     }
 
     @Override
@@ -31,6 +37,8 @@ public class ExcluirUsuarioCommand implements Command {
                 System.out.println("RA inválido. Digite novamente:");
             }
         } while (!ra.matches("^[0-9]+$"));
+
+        raExclusao = ra;
 
         SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO = new SolicitaInformacoesUsuarioDTO("excluirUsuario", token, ra);
 
