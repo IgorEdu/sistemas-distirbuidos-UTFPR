@@ -9,6 +9,8 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>com.domain.entities.User</class>
         <class>com.domain.entities.Category</class>
+        <class>com.domain.entities.Notice</class>
+        <class>com.domain.entities.UserCategory</class>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/sistemas-distribuidos?useTimezone=true&amp;serverTimezone=UTC"/>

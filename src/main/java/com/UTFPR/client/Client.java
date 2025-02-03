@@ -100,6 +100,18 @@ public class Client {
                         command = new LocalizarCategoriaCommand(out, stdIn, objectMapper, token);
                         command.execute();
                         break;
+                    case "6":
+                        command = new ListarAvisosCommand(out, stdIn, objectMapper, token);
+                        command.execute();
+                        break;
+                    case "7":
+                        command = new LocalizarAvisoCommand(out, stdIn, objectMapper, token);
+                        command.execute();
+                        break;
+                    case "8":
+                        command = new CadastrarUsuarioCategoriaAvisosCommand(out, stdIn, objectMapper, token);
+                        command.execute();
+                        break;
                     case "a1":
                         command = new ListarUsuariosCommand(out, stdIn, objectMapper, token);
                         command.execute();
@@ -110,6 +122,14 @@ public class Client {
                         break;
                     case "a3":
                         command = new ExcluirCategoriaCommand(out, stdIn, objectMapper, token);
+                        command.execute();
+                        break;
+                    case "a4":
+                        command = new SalvarAvisoCommand(out, stdIn, objectMapper, token);
+                        command.execute();
+                        break;
+                    case "a5":
+                        command = new ExcluirAvisoCommand(out, stdIn, objectMapper, token);
                         command.execute();
                         break;
                     default:
@@ -208,6 +228,9 @@ public class Client {
         System.out.println("\t3 - editar usuário");
         System.out.println("\t4 - listar categorias");
         System.out.println("\t5 - localizar categoria");
+        System.out.println("\t6 - listar avisos");
+        System.out.println("\t7 - localizar aviso");
+        System.out.println("\t8 - cadastrar usuario em categoria de avisos");
 
         if (token.equals("9999999")) {
             System.out.println("-----------------------------");
@@ -216,6 +239,8 @@ public class Client {
             System.out.println("\ta1 - listar usuarios");
             System.out.println("\ta2 - salvar categoria");
             System.out.println("\ta3 - excluir categoria");
+            System.out.println("\ta4 - salvar aviso");
+            System.out.println("\ta5 - excluir aviso");
             System.out.println("-----------------------------");
         }
 

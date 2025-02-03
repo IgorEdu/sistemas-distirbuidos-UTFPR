@@ -12,11 +12,11 @@ public class ResponseDTO {
     private String operacao;
     private String mensagem;
     private String token;
-    private String usuario;
-    private String categoria;
+    private UsuarioDTO usuario;
+    private CategoriaDTO categoria;
 
-    private String usuarios;
-    private String categorias;
+    private List<UsuarioDTO> usuarios;
+    private List<CategoriaDTO> categorias;
 
     public ResponseDTO() {
     }
@@ -52,35 +52,35 @@ public class ResponseDTO {
         this.token = token;
     }
 
-    public String getUsuario() {
+    public UsuarioDTO getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(String usuario) {
+    public void setUsuario(UsuarioDTO usuario) {
         this.usuario = usuario;
     }
 
-    public String getCategoria() {
+    public CategoriaDTO getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(CategoriaDTO categoria) {
         this.categoria = categoria;
     }
 
-    public String getUsuarios() {
+    public List<UsuarioDTO> getUsuarios() {
         return usuarios;
     }
 
-    public void setUsuarios(String usuarios) {
+    public void setUsuarios(List<UsuarioDTO> usuarios) {
         this.usuarios = usuarios;
     }
 
-    public String getCategorias() {
+    public List<CategoriaDTO> getCategorias() {
         return categorias;
     }
 
-    public void setCategorias(String categorias) {
+    public void setCategorias(List<CategoriaDTO> categorias) {
         this.categorias = categorias;
     }
 }

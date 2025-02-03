@@ -9,18 +9,18 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class EditaUsuarioDTO implements CredentialProvider {
     private String operacao;
     private String token;
-    private UsuarioDTO usuarioDTO;
+    private UsuarioDTO usuario;
 
     public EditaUsuarioDTO(String operacao, String token, User usuario) {
         this.operacao = operacao;
         this.token = token;
-        this.usuarioDTO = new UsuarioDTO(usuario.getRa(), usuario.getSenha(), usuario.getNome());
+        this.usuario = new UsuarioDTO(usuario.getRa(), usuario.getSenha(), usuario.getNome());
     }
 
     public EditaUsuarioDTO(String operacao, String token, UsuarioDTO usuarioDTO) {
         this.operacao = operacao;
         this.token = token;
-        this.usuarioDTO = usuarioDTO;
+        this.usuario = usuarioDTO;
     }
 
     public EditaUsuarioDTO() {
@@ -42,23 +42,23 @@ public class EditaUsuarioDTO implements CredentialProvider {
         this.token = token;
     }
 
-    public UsuarioDTO getUsuarioDTO() {
-        return usuarioDTO;
+    public UsuarioDTO getUsuario() {
+        return usuario;
     }
 
     public void setUsuario(User usuario) {
-        this.usuarioDTO = new UsuarioDTO(usuario.getRa(), usuario.getSenha(), usuario.getNome());
+        this.usuario = new UsuarioDTO(usuario.getRa(), usuario.getSenha(), usuario.getNome());
     }
 
     @Override
     @JsonIgnore
     public String getRa() {
-        return usuarioDTO.getRa();
+        return usuario.getRa();
     }
 
     @Override
     @JsonIgnore
     public String getSenha() {
-        return usuarioDTO.getSenha();
+        return usuario.getSenha();
     }
 }

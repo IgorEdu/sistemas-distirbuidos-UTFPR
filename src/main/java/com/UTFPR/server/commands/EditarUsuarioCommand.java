@@ -37,7 +37,7 @@ public class EditarUsuarioCommand implements Command {
         ResponseDTO responseDTO;
 
         try {
-            if (!Objects.equals(editaUsuarioDTO.getUsuarioDTO().getRa(), editaUsuarioDTO.getToken()) && !userService.isAdminByToken(editaUsuarioDTO.getToken())) {
+            if (!Objects.equals(editaUsuarioDTO.getUsuario().getRa(), editaUsuarioDTO.getToken()) && !userService.isAdminByToken(editaUsuarioDTO.getToken())) {
                 responseDTO = responseService.createErrorResponse(
                         editaUsuarioDTO.getOperacao(),
                         "Usuario nao autorizado"
@@ -48,8 +48,8 @@ public class EditarUsuarioCommand implements Command {
                 return;
             }
 
-            User oldUser = userService.getUserByRa(editaUsuarioDTO.getUsuarioDTO().getRa());
-            User newUser = editaUsuarioDTO.getUsuarioDTO().toUser();
+            User oldUser = userService.getUserByRa(editaUsuarioDTO.getUsuario().getRa());
+            User newUser = editaUsuarioDTO.getUsuario().toUser();
 
             if (oldUser == null) {
                 responseDTO = responseService.createErrorResponse(
@@ -62,11 +62,11 @@ public class EditarUsuarioCommand implements Command {
                 return;
             }
 
-            if (!userService.isValidRa(editaUsuarioDTO) || !userService.isValidPassword(editaUsuarioDTO) || !userService.isValidName(editaUsuarioDTO.getUsuarioDTO().getNome())) {
+            if (!userService.isValidRa(editaUsuarioDTO) || !userService.isValidPassword(editaUsuarioDTO) || !userService.isValidName(editaUsuarioDTO.getUsuario().getNome())) {
 
                 System.out.println("RA valido: " + userService.isValidRa(editaUsuarioDTO));
                 System.out.println("Senha valida: " + userService.isValidPassword(editaUsuarioDTO));
-                System.out.println("Nome valido: " + userService.isValidName(editaUsuarioDTO.getUsuarioDTO().getNome()));
+                System.out.println("Nome valido: " + userService.isValidName(editaUsuarioDTO.getUsuario().getNome()));
 
                 responseDTO = responseService.createErrorResponse(
                         editaUsuarioDTO.getOperacao(),

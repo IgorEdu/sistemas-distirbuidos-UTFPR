@@ -1,21 +1,20 @@
 package com.UTFPR.domain.dto;
 
-import com.UTFPR.domain.entities.Category;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class SalvarCategoriaDTO {
+public class SolicitaInformacoesAvisoDTO {
     private String operacao;
     private String token;
-    private CategoriaDTO categoria;
+    private String id;
 
-    public SalvarCategoriaDTO(String operacao, String token, CategoriaDTO categoriaDTO) {
+    public SolicitaInformacoesAvisoDTO(String operacao, String token, String id) {
         this.operacao = operacao;
         this.token = token;
-        this.categoria = categoriaDTO;
+        this.id = id;
     }
 
-    public SalvarCategoriaDTO() {
+    public SolicitaInformacoesAvisoDTO() {
     }
 
     public String getOperacao() {
@@ -34,12 +33,11 @@ public class SalvarCategoriaDTO {
         this.token = token;
     }
 
-    public CategoriaDTO getCategoria() {
-        return categoria;
+    public String getId() {
+        return id;
     }
 
-    public void setCategoria(CategoriaDTO categoriaDTO) {
-        this.categoria = categoriaDTO;
+    public void setId(String id) {
+        this.id = id;
     }
-
 }

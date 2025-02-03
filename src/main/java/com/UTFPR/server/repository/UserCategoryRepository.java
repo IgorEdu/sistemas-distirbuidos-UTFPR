@@ -1,27 +1,28 @@
 package com.UTFPR.server.repository;
 
 import com.UTFPR.domain.entities.Category;
+import com.UTFPR.domain.entities.UserCategory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
 
-public class CategoryRepository {
+public class UserCategoryRepository {
     private EntityManager em;
 
-    public CategoryRepository(EntityManager em) {
+    public UserCategoryRepository(EntityManager em) {
         this.em = em;
     }
 
-    public List<Category> listAllCategories() {
-        try {
-            TypedQuery<Category> query = em.createQuery("SELECT c FROM categorias c", Category.class);
-            return query.getResultList();
-        } catch (Exception e) {
-            throw e;
-        }
-    }
+//    public List<UserCategory> listAllUserCategories() {
+//        try {
+//            TypedQuery<Category> query = em.createQuery("SELECT c FROM categorias c", Category.class);
+//            return query.getResultList();
+//        } catch (Exception e) {
+//            throw e;
+//        }
+//    }
 
     public List<Category> findCategoryById(Long id) {
         try {
