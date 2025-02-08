@@ -54,6 +54,8 @@ public class ServerController {
             ServerOptionsController optionsController = loader.getController();
             optionsController.setPortaServidor(porta);
 
+            serverService.setServerOptionsController(optionsController);
+
             // Alterar a cena
             Stage stage = (Stage) btnIniciarServidor.getScene().getWindow();
             Scene nextScene = new Scene(nextSceneRoot);
@@ -82,9 +84,9 @@ public class ServerController {
             try {
                 String serverIP = "127.0.0.1";
                 int serverPort = port;
-//                String token = "999999";
+                String token = "9999999";
 
-                com.UTFPR.client.Client.main(new String[]{serverIP, String.valueOf(serverPort)});
+                com.UTFPR.client.Client.main(new String[]{serverIP, String.valueOf(serverPort), token});
             } catch (Exception e) {
                 System.err.println("Erro ao iniciar o cliente: " + e.getMessage());
                 e.printStackTrace();

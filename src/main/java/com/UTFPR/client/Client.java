@@ -29,7 +29,7 @@ public class Client {
         } else {
             serverIP = args[0];
             serverPort = Integer.parseInt(args[1]);
-//            token = args[2];
+            token = args[2];
         }
 
         Socket serverSocket = null;

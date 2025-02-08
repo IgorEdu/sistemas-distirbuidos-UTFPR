@@ -1,5 +1,6 @@
 package com.UTFPR.server.service;
 
+import com.UTFPR.controller.ServerOptionsController;
 import com.UTFPR.domain.dto.OperacaoDTO;
 import com.UTFPR.server.commands.CommandInvoker;
 import com.UTFPR.server.infra.AdminInitializer;
@@ -17,12 +18,18 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ServerService {
     private int port = 20001; // Porta padrão
     private ServerSocket serverSocket;
     private boolean adminInitialized = false;
     private Thread serverThread;
+
+    private ServerOptionsController serverOptionsController;
+
+    private List<String> usuariosConectados = new ArrayList<>();
 
 
     public ServerService() {
@@ -35,6 +42,10 @@ public class ServerService {
 
     public int getPort() {
         return port;
+    }
+
+    public void setServerOptionsController(ServerOptionsController controller) {
+        this.serverOptionsController = controller;
     }
 
     public void startServer() throws IOException {
@@ -80,6 +91,18 @@ public class ServerService {
 
             String usuario = clientSocket.getInetAddress().toString();
 
+            usuariosConectados.add(usuario);
+
+            String ipCliente = clientSocket.getInetAddress().toString();
+            String nomeUsuario = "Desconhecido";
+
+            // Atualiza a lista de usuários conectados na interface gráfica
+            if (serverOptionsController != null) {
+                String usuarioInfo = nomeUsuario + " (" + ipCliente + ")";
+                serverOptionsController.adicionarUsuarioConectado(usuarioInfo);
+            }
+
+
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/server-view.fxml"));
                 Parent root = loader.load(); // Carrega o FXML corretamente
@@ -111,7 +134,12 @@ public class ServerService {
                 } catch (Exception e) {
                     System.err.println("Erro durante comunicação com o cliente: " + e.getMessage());
                 } finally {
-                    clientSocket.close();
+                    serverOptionsController.removerUsuario(usuario);
+                    try {
+                        clientSocket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             } catch (Exception e) {
                 System.err.println("Erro ao carregar o FXML ou configurar o controlador: " + e.getMessage());

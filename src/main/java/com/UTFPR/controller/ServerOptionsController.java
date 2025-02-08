@@ -2,6 +2,7 @@ package com.UTFPR.controller;
 
 import com.UTFPR.domain.entities.User;
 import com.UTFPR.server.service.UserService;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -34,12 +35,12 @@ public class ServerOptionsController {
         lblPortaServidor.setText(String.valueOf(porta));
     }
 
-    public void atualizarListaUsuarios(String usuario) {
-        listViewUsuarios.getItems().add(usuario);
+    public void adicionarUsuarioConectado(String usuario) {
+        Platform.runLater(() -> listViewUsuarios.getItems().add(usuario));
     }
 
     public void removerUsuario(String usuario) {
-        listViewUsuarios.getItems().remove(usuario);
+        Platform.runLater(() -> listViewUsuarios.getItems().remove(usuario));
     }
 
     public void setUserService(UserService userService) {
