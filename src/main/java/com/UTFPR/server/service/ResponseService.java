@@ -120,31 +120,31 @@ public class ResponseService {
         return response;
     }
 
-    public ResponseDTO returnSuccessResponseListNotices(String operacao, List<Notice> notices, Category category) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-
-            List<AvisoComInfoCategoriaDTO> noticeDTOs = (notices != null)
-                    ? notices.stream()
-                    .map(notice -> new AvisoComInfoCategoriaDTO(
-                                                (int) notice.getId(),
-                                                notice.getTitulo(),
-                                                notice.getDescricao(),
-                                                category))
-                    .collect(Collectors.toList())
-                    : List.of();
-
-//            String avisos = objectMapper.writeValueAsString(noticeDTOs);
-
-            ResponseDTO response = new ResponseDTO();
-            response.setStatus(201);
-            response.setOperacao(operacao);
-            response.setAvisosComInfoCategoria(noticeDTOs);
-            return response;
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao serializar categorias", e);
-        }
-    }
+//    public ResponseDTO returnSuccessResponseListNotices(String operacao, List<Notice> notices, Category category) {
+//        try {
+//            ObjectMapper objectMapper = new ObjectMapper();
+//
+//            List<AvisoComInfoCategoriaDTO> noticeDTOs = (notices != null)
+//                    ? notices.stream()
+//                    .map(notice -> new AvisoComInfoCategoriaDTO(
+//                                                (int) notice.getId(),
+//                                                notice.getTitulo(),
+//                                                notice.getDescricao(),
+//                                                category))
+//                    .collect(Collectors.toList())
+//                    : List.of();
+//
+////            String avisos = objectMapper.writeValueAsString(noticeDTOs);
+//
+//            ResponseDTO response = new ResponseDTO();
+//            response.setStatus(201);
+//            response.setOperacao(operacao);
+//            response.setAvisosComInfoCategoria(noticeDTOs);
+//            return response;
+//        } catch (Exception e) {
+//            throw new RuntimeException("Erro ao serializar categorias", e);
+//        }
+//    }
 
     public ResponseDTO returnSuccessResponseListNotices(String operacao, List<Notice> notices) {
         try {
@@ -172,26 +172,26 @@ public class ResponseService {
         }
     }
 
-//    public ResponseDTO returnSuccessResponseNoticeInformations(String operacao, Notice notice, Category category) {
-//        try {
-//            ObjectMapper objectMapper = new ObjectMapper();
-//
-//            AvisoComInfoCategoriaDTO noticeDTO = new AvisoComInfoCategoriaDTO(
-//                                                    (int) notice.getId(),
-//                                                    notice.getTitulo(),
-//                                                    notice.getDescricao(),
-//                                                    category
-//            );
-//
+    public ResponseDTO returnSuccessResponseNoticeInformations(String operacao, Notice notice, Category category) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            AvisoComInfoCategoriaDTO noticeDTO = new AvisoComInfoCategoriaDTO(
+                                                    (int) notice.getId(),
+                                                    notice.getTitulo(),
+                                                    notice.getDescricao(),
+                                                    category
+            );
+
 //            String aviso = objectMapper.writeValueAsString(noticeDTO);
-//
-//            ResponseDTO response = new ResponseDTO();
-//            response.setStatus(201);
-//            response.setOperacao(operacao);
-//            response.setCategorias(aviso);
-//            return response;
-//        } catch (Exception e) {
-//            throw new RuntimeException("Erro ao serializar categorias", e);
-//        }
-//    }
+
+            ResponseDTO response = new ResponseDTO();
+            response.setStatus(201);
+            response.setOperacao(operacao);
+            response.setAviso(noticeDTO);
+            return response;
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao serializar categorias", e);
+        }
+    }
 }

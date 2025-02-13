@@ -14,6 +14,7 @@ public class ResponseDTO {
     private String token;
     private UsuarioDTO usuario;
     private CategoriaDTO categoria;
+    private AvisoComInfoCategoriaDTO aviso;
 
     private List<UsuarioDTO> usuarios;
     private List<CategoriaDTO> categorias;
@@ -91,6 +92,14 @@ public class ResponseDTO {
 
     public void setAvisosComInfoCategoria(List<AvisoComInfoCategoriaDTO> avisosComInfoCategoria) {
         this.avisosComInfoCategoria = avisosComInfoCategoria;
+    }
+
+    public AvisoComInfoCategoriaDTO getAviso() {
+        return aviso;
+    }
+
+    public void setAviso(AvisoComInfoCategoriaDTO aviso) {
+        this.aviso = aviso;
     }
 }
 
