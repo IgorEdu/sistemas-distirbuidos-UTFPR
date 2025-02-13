@@ -11,7 +11,7 @@ public class AdminInitializer {
         query.setParameter("is_admin", true);
 
         if (query.getResultList().isEmpty()) {
-            User user = new User("9999999", "adminadmin", "admin");
+            User user = new User("9999999", "adminadmin", "ADMIN");
             user.setAdmin(true);
 
             em.getTransaction().begin();
