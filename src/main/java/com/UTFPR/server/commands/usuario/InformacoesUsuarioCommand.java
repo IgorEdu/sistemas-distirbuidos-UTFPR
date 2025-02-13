@@ -1,6 +1,5 @@
-package com.UTFPR.server.commands;
+package com.UTFPR.server.commands.usuario;
 
-import com.UTFPR.domain.dto.OperacaoComTokenDTO;
 import com.UTFPR.domain.dto.ResponseDTO;
 import com.UTFPR.domain.dto.SolicitaInformacoesUsuarioDTO;
 import com.UTFPR.domain.entities.User;
@@ -12,19 +11,18 @@ import jakarta.persistence.PersistenceException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import java.util.Objects;
 
-public class ListarUsuariosCommand implements Command {
-    private OperacaoComTokenDTO operacaoComTokenDTO;
+public class InformacoesUsuarioCommand implements Command {
+    private SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO;
     private UserService userService;
     private ResponseService responseService;
     private ResponseFormatter responseFormatter;
     private PrintWriter out;
     private String clientAddress;
 
-    public ListarUsuariosCommand(OperacaoComTokenDTO operacaoComTokenDTO, UserService userService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out, String clientAddress) {
-        this.operacaoComTokenDTO = operacaoComTokenDTO;
+    public InformacoesUsuarioCommand(SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO, UserService userService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out, String clientAddress) {
+        this.solicitaInformacoesUsuarioDTO = solicitaInformacoesUsuarioDTO;
         this.userService = userService;
         this.responseService = responseService;
         this.responseFormatter = responseFormatter;
@@ -38,9 +36,9 @@ public class ListarUsuariosCommand implements Command {
         ResponseDTO responseDTO;
 
         try {
-            if(!userService.isAdminByToken(operacaoComTokenDTO.getToken())){
+            if(!Objects.equals(solicitaInformacoesUsuarioDTO.getRa(), solicitaInformacoesUsuarioDTO.getToken()) && !userService.isAdminByToken(solicitaInformacoesUsuarioDTO.getToken())){
                 responseDTO = responseService.createErrorResponse(
-                        operacaoComTokenDTO.getOperacao(),
+                        solicitaInformacoesUsuarioDTO.getOperacao(),
                         "Usuario nao autorizado"
                 );
                 formattedResponse = responseFormatter.formatResponse(responseDTO);
@@ -49,14 +47,25 @@ public class ListarUsuariosCommand implements Command {
                 return;
             }
 
-            List<User> users = userService.getAllUsers();
+            User user = userService.getUserByRa(solicitaInformacoesUsuarioDTO.getRa());
 
-            responseDTO = responseService.returnSuccessResponseListUsers(operacaoComTokenDTO.getOperacao(),users);
+            if(user == null) {
+                responseDTO = responseService.createErrorResponse(
+                        solicitaInformacoesUsuarioDTO.getOperacao(),
+                        "Usuario nao encontrado"
+                );
+                formattedResponse = responseFormatter.formatResponse(responseDTO);
+                System.out.println("Server (" + clientAddress + "): " + formattedResponse);
+                out.println(formattedResponse);
+                return;
+            }
+
+            responseDTO = responseService.returnSuccessResponseUserInformations(solicitaInformacoesUsuarioDTO.getOperacao(),user);
             formattedResponse = responseFormatter.formatResponse(responseDTO);
             System.out.println("Server (" + clientAddress + "): " + formattedResponse);
         } catch (PersistenceException e) {
             responseDTO = responseService.createErrorResponse(
-                    operacaoComTokenDTO.getOperacao(),
+                    solicitaInformacoesUsuarioDTO.getOperacao(),
                     "O servidor nao conseguiu conectar com o banco de dados"
             );
             formattedResponse = responseFormatter.formatResponse(responseDTO);
@@ -65,7 +74,7 @@ public class ListarUsuariosCommand implements Command {
         }
         catch (Exception e) {
             responseDTO = responseService.createErrorResponse(
-                    operacaoComTokenDTO.getOperacao(),
+                    solicitaInformacoesUsuarioDTO.getOperacao(),
                     "Erro interno no servidor."
             );
             formattedResponse = responseFormatter.formatResponse(responseDTO);

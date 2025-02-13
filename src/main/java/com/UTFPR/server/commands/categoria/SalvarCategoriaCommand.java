@@ -1,30 +1,31 @@
-package com.UTFPR.server.commands;
+package com.UTFPR.server.commands.categoria;
 
 import com.UTFPR.domain.dto.ResponseDTO;
-import com.UTFPR.domain.dto.SolicitaInformacoesAvisoDTO;
-import com.UTFPR.domain.dto.SolicitaInformacoesCategoriaDTO;
+import com.UTFPR.domain.dto.SalvarCategoriaDTO;
 import com.UTFPR.domain.entities.Category;
-import com.UTFPR.domain.entities.Notice;
-import com.UTFPR.server.service.*;
+import com.UTFPR.server.service.CategoryService;
+import com.UTFPR.server.service.ResponseFormatter;
+import com.UTFPR.server.service.ResponseService;
+import com.UTFPR.server.service.UserService;
 import com.UTFPR.shared.commands.Command;
 import jakarta.persistence.PersistenceException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class ExcluirAvisoCommand implements Command {
-    private SolicitaInformacoesAvisoDTO solicitaInformacoesAvisoDTO;
+public class SalvarCategoriaCommand implements Command {
+    private SalvarCategoriaDTO salvarCategoriaDTO;
     private UserService userService;
-    private NoticeService noticeService;
+    private CategoryService categoryService;
     private ResponseService responseService;
     private ResponseFormatter responseFormatter;
     private PrintWriter out;
     private String clientAddress;
 
-    public ExcluirAvisoCommand(SolicitaInformacoesAvisoDTO solicitaInformacoesAvisoDTO, UserService userService, NoticeService noticeService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out, String clientAddress) {
-        this.solicitaInformacoesAvisoDTO = solicitaInformacoesAvisoDTO;
+    public  SalvarCategoriaCommand(SalvarCategoriaDTO salvarCategoriaDTO, UserService userService, CategoryService categoryService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out, String clientAddress) {
+        this.salvarCategoriaDTO = salvarCategoriaDTO;
         this.userService = userService;
-        this.noticeService = noticeService;
+        this.categoryService = categoryService;
         this.responseService = responseService;
         this.responseFormatter = responseFormatter;
         this.out = out;
@@ -37,9 +38,9 @@ public class ExcluirAvisoCommand implements Command {
         ResponseDTO responseDTO;
 
         try {
-            if(!userService.isAdminByToken(solicitaInformacoesAvisoDTO.getToken())){
+            if (!userService.isAdminByToken(salvarCategoriaDTO.getToken())) {
                 responseDTO = responseService.createErrorResponse(
-                        solicitaInformacoesAvisoDTO.getOperacao(),
+                        salvarCategoriaDTO.getOperacao(),
                         "Usuario nao autorizado"
                 );
                 formattedResponse = responseFormatter.formatResponse(responseDTO);
@@ -48,12 +49,23 @@ public class ExcluirAvisoCommand implements Command {
                 return;
             }
 
-            Notice notice = noticeService.getNoticeById(Integer.parseInt(solicitaInformacoesAvisoDTO.getId()));
+            if(salvarCategoriaDTO.getCategoria().getId() == 0){
+                categoryService.registerCategory(salvarCategoriaDTO.getCategoria().toCategory());
+                responseDTO = responseService.createSuccessResponseWithMessage(salvarCategoriaDTO.getOperacao(),
+                        "Categoria salva com sucesso");
+                formattedResponse = responseFormatter.formatResponse(responseDTO);
+                System.out.println("Server (" + clientAddress + "): " + formattedResponse);
+                out.println(formattedResponse);
+                return;
+            }
 
-            if(notice == null) {
+            Category oldCategory = categoryService.getCategoryById(salvarCategoriaDTO.getCategoria().getId());
+            Category newCategory = salvarCategoriaDTO.getCategoria().toCategory();
+
+            if (oldCategory == null) {
                 responseDTO = responseService.createErrorResponse(
-                        solicitaInformacoesAvisoDTO.getOperacao(),
-                        "Aviso nao encontrado"
+                        salvarCategoriaDTO.getOperacao(),
+                        "Categoria nao encontrada"
                 );
                 formattedResponse = responseFormatter.formatResponse(responseDTO);
                 System.out.println("Server (" + clientAddress + "): " + formattedResponse);
@@ -61,35 +73,22 @@ public class ExcluirAvisoCommand implements Command {
                 return;
             }
 
-//            if(noticeService.isPresentOnWarnings((int) category.getId())){
-//                responseDTO = responseService.createErrorResponse(
-//                        solicitaInformacoesAvisoDTO.getOperacao(),
-//                        "Não foi possível excluir, a categoria já está alocada a um ou mais avisos."
-//                );
-//                formattedResponse = responseFormatter.formatResponse(responseDTO);
-//                System.out.println("Server (" + clientAddress + "): " + formattedResponse);
-//                out.println(formattedResponse);
-//                return;
-//            }
-
-            noticeService.deleteNotice(notice);
-
-            responseDTO = responseService.createSuccessResponseWithMessage(solicitaInformacoesAvisoDTO.getOperacao(),
-                    "Exclusão realizada com sucesso");
+            categoryService.editCategoryById((int) oldCategory.getId(), newCategory);
+            responseDTO = responseService.createSuccessResponseWithMessage(salvarCategoriaDTO.getOperacao(),
+                    "Categoria salva com sucesso");
             formattedResponse = responseFormatter.formatResponse(responseDTO);
             System.out.println("Server (" + clientAddress + "): " + formattedResponse);
         } catch (PersistenceException e) {
             responseDTO = responseService.createErrorResponse(
-                    solicitaInformacoesAvisoDTO.getOperacao(),
+                    salvarCategoriaDTO.getOperacao(),
                     "O servidor nao conseguiu conectar com o banco de dados"
             );
             formattedResponse = responseFormatter.formatResponse(responseDTO);
             System.out.println("Server (" + clientAddress + "): " + formattedResponse);
             e.printStackTrace();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             responseDTO = responseService.createErrorResponse(
-                    solicitaInformacoesAvisoDTO.getOperacao(),
+                    salvarCategoriaDTO.getOperacao(),
                     "Erro interno no servidor."
             );
             formattedResponse = responseFormatter.formatResponse(responseDTO);

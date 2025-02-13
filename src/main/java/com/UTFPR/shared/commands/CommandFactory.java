@@ -2,6 +2,15 @@ package com.UTFPR.shared.commands;
 
 import com.UTFPR.domain.dto.*;
 import com.UTFPR.server.commands.*;
+import com.UTFPR.server.commands.aviso.ExcluirAvisoCommand;
+import com.UTFPR.server.commands.aviso.InformacoesAvisoCommand;
+import com.UTFPR.server.commands.aviso.ListarAvisosCommand;
+import com.UTFPR.server.commands.aviso.SalvarAvisoCommand;
+import com.UTFPR.server.commands.categoria.ExcluirCategoriaCommand;
+import com.UTFPR.server.commands.categoria.InformacoesCategoriaCommand;
+import com.UTFPR.server.commands.categoria.ListarCategoriasCommand;
+import com.UTFPR.server.commands.categoria.SalvarCategoriaCommand;
+import com.UTFPR.server.commands.usuario.*;
 import com.UTFPR.server.infra.DatabaseConnection;
 import com.UTFPR.server.repository.CategoryRepository;
 import com.UTFPR.server.repository.NoticeRepository;

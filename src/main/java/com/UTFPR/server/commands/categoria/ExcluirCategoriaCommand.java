@@ -1,8 +1,9 @@
-package com.UTFPR.server.commands;
+package com.UTFPR.server.commands.categoria;
 
 import com.UTFPR.domain.dto.ResponseDTO;
-import com.UTFPR.domain.dto.SolicitaInformacoesUsuarioDTO;
-import com.UTFPR.domain.entities.User;
+import com.UTFPR.domain.dto.SolicitaInformacoesCategoriaDTO;
+import com.UTFPR.domain.entities.Category;
+import com.UTFPR.server.service.CategoryService;
 import com.UTFPR.server.service.ResponseFormatter;
 import com.UTFPR.server.service.ResponseService;
 import com.UTFPR.server.service.UserService;
@@ -11,19 +12,20 @@ import jakarta.persistence.PersistenceException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Objects;
 
-public class ExcluirUsuarioCommand implements Command {
-    private SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO;
+public class ExcluirCategoriaCommand implements Command {
+    private SolicitaInformacoesCategoriaDTO solicitaInformacoesCategoriaDTO;
     private UserService userService;
+    private CategoryService categoryService;
     private ResponseService responseService;
     private ResponseFormatter responseFormatter;
     private PrintWriter out;
     private String clientAddress;
 
-    public ExcluirUsuarioCommand(SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO, UserService userService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out, String clientAddress) {
-        this.solicitaInformacoesUsuarioDTO = solicitaInformacoesUsuarioDTO;
+    public ExcluirCategoriaCommand(SolicitaInformacoesCategoriaDTO solicitaInformacoesCategoriaDTO, UserService userService, CategoryService categoryService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out, String clientAddress) {
+        this.solicitaInformacoesCategoriaDTO = solicitaInformacoesCategoriaDTO;
         this.userService = userService;
+        this.categoryService = categoryService;
         this.responseService = responseService;
         this.responseFormatter = responseFormatter;
         this.out = out;
@@ -36,9 +38,9 @@ public class ExcluirUsuarioCommand implements Command {
         ResponseDTO responseDTO;
 
         try {
-            if(!Objects.equals(solicitaInformacoesUsuarioDTO.getRa(), solicitaInformacoesUsuarioDTO.getToken()) && !userService.isAdminByToken(solicitaInformacoesUsuarioDTO.getToken())){
+            if(!userService.isAdminByToken(solicitaInformacoesCategoriaDTO.getToken())){
                 responseDTO = responseService.createErrorResponse(
-                        solicitaInformacoesUsuarioDTO.getOperacao(),
+                        solicitaInformacoesCategoriaDTO.getOperacao(),
                         "Usuario nao autorizado"
                 );
                 formattedResponse = responseFormatter.formatResponse(responseDTO);
@@ -47,12 +49,12 @@ public class ExcluirUsuarioCommand implements Command {
                 return;
             }
 
-            User user = userService.getUserByRa(solicitaInformacoesUsuarioDTO.getRa());
+            Category category = categoryService.getCategoryById(Integer.parseInt(solicitaInformacoesCategoriaDTO.getId()));
 
-            if(user == null) {
+            if(category == null) {
                 responseDTO = responseService.createErrorResponse(
-                        solicitaInformacoesUsuarioDTO.getOperacao(),
-                        "Usuario nao encontrado"
+                        solicitaInformacoesCategoriaDTO.getOperacao(),
+                        "Categoria nao encontrada"
                 );
                 formattedResponse = responseFormatter.formatResponse(responseDTO);
                 System.out.println("Server (" + clientAddress + "): " + formattedResponse);
@@ -60,15 +62,26 @@ public class ExcluirUsuarioCommand implements Command {
                 return;
             }
 
-            userService.deleteUser(user);
+            if(categoryService.isPresentOnWarnings((int) category.getId())){
+                responseDTO = responseService.createErrorResponse(
+                        solicitaInformacoesCategoriaDTO.getOperacao(),
+                        "Não foi possível excluir, a categoria já está alocada a um ou mais avisos."
+                );
+                formattedResponse = responseFormatter.formatResponse(responseDTO);
+                System.out.println("Server (" + clientAddress + "): " + formattedResponse);
+                out.println(formattedResponse);
+                return;
+            }
 
-            responseDTO = responseService.createSuccessResponseWithMessage(solicitaInformacoesUsuarioDTO.getOperacao(),
+            categoryService.deleteCategory(category);
+
+            responseDTO = responseService.createSuccessResponseWithMessage(solicitaInformacoesCategoriaDTO.getOperacao(),
                     "Exclusão realizada com sucesso");
             formattedResponse = responseFormatter.formatResponse(responseDTO);
             System.out.println("Server (" + clientAddress + "): " + formattedResponse);
         } catch (PersistenceException e) {
             responseDTO = responseService.createErrorResponse(
-                    solicitaInformacoesUsuarioDTO.getOperacao(),
+                    solicitaInformacoesCategoriaDTO.getOperacao(),
                     "O servidor nao conseguiu conectar com o banco de dados"
             );
             formattedResponse = responseFormatter.formatResponse(responseDTO);
@@ -77,7 +90,7 @@ public class ExcluirUsuarioCommand implements Command {
         }
         catch (Exception e) {
             responseDTO = responseService.createErrorResponse(
-                    solicitaInformacoesUsuarioDTO.getOperacao(),
+                    solicitaInformacoesCategoriaDTO.getOperacao(),
                     "Erro interno no servidor."
             );
             formattedResponse = responseFormatter.formatResponse(responseDTO);

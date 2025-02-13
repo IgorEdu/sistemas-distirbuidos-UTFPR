@@ -1,30 +1,30 @@
-package com.UTFPR.server.commands;
+package com.UTFPR.server.commands.aviso;
 
-import com.UTFPR.domain.dto.EditaUsuarioDTO;
 import com.UTFPR.domain.dto.ResponseDTO;
-import com.UTFPR.domain.dto.SolicitaInformacoesUsuarioDTO;
-import com.UTFPR.domain.entities.User;
-import com.UTFPR.server.service.ResponseFormatter;
-import com.UTFPR.server.service.ResponseService;
-import com.UTFPR.server.service.UserService;
+import com.UTFPR.domain.dto.SalvarAvisoDTO;
+import com.UTFPR.domain.entities.Notice;
+import com.UTFPR.server.service.*;
 import com.UTFPR.shared.commands.Command;
 import jakarta.persistence.PersistenceException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Objects;
 
-public class EditarUsuarioCommand implements Command {
-    private EditaUsuarioDTO editaUsuarioDTO;
+public class SalvarAvisoCommand implements Command {
+    private SalvarAvisoDTO salvarAvisoDTO;
     private UserService userService;
+    private NoticeService noticeService;
+    private CategoryService categoryService;
     private ResponseService responseService;
     private ResponseFormatter responseFormatter;
     private PrintWriter out;
     private String clientAddress;
 
-    public EditarUsuarioCommand(EditaUsuarioDTO editaUsuarioDTO, UserService userService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out, String clientAddress) {
-        this.editaUsuarioDTO = editaUsuarioDTO;
+    public SalvarAvisoCommand(SalvarAvisoDTO salvarAvisoDTO, UserService userService, NoticeService noticeService, CategoryService categoryService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out, String clientAddress) {
+        this.salvarAvisoDTO = salvarAvisoDTO;
         this.userService = userService;
+        this.noticeService = noticeService;
+        this.categoryService = categoryService;
         this.responseService = responseService;
         this.responseFormatter = responseFormatter;
         this.out = out;
@@ -37,9 +37,9 @@ public class EditarUsuarioCommand implements Command {
         ResponseDTO responseDTO;
 
         try {
-            if (!Objects.equals(editaUsuarioDTO.getUsuario().getRa(), editaUsuarioDTO.getToken()) && !userService.isAdminByToken(editaUsuarioDTO.getToken())) {
+            if (!userService.isAdminByToken(salvarAvisoDTO.getToken())) {
                 responseDTO = responseService.createErrorResponse(
-                        editaUsuarioDTO.getOperacao(),
+                        salvarAvisoDTO.getOperacao(),
                         "Usuario nao autorizado"
                 );
                 formattedResponse = responseFormatter.formatResponse(responseDTO);
@@ -48,13 +48,23 @@ public class EditarUsuarioCommand implements Command {
                 return;
             }
 
-            User oldUser = userService.getUserByRa(editaUsuarioDTO.getUsuario().getRa());
-            User newUser = editaUsuarioDTO.getUsuario().toUser();
+            if(salvarAvisoDTO.getAviso().getId() == 0){
+                noticeService.registerNotice(salvarAvisoDTO.getAviso().toNotice(categoryService));
+                responseDTO = responseService.createSuccessResponseWithMessage(salvarAvisoDTO.getOperacao(),
+                        "Aviso salvo com sucesso");
+                formattedResponse = responseFormatter.formatResponse(responseDTO);
+                System.out.println("Server (" + clientAddress + "): " + formattedResponse);
+                out.println(formattedResponse);
+                return;
+            }
 
-            if (oldUser == null) {
+            Notice oldNotice = noticeService.getNoticeById(salvarAvisoDTO.getAviso().getId());
+            Notice newNotice = salvarAvisoDTO.getAviso().toNotice(categoryService);
+
+            if (oldNotice == null) {
                 responseDTO = responseService.createErrorResponse(
-                        editaUsuarioDTO.getOperacao(),
-                        "Usuario nao encontrado"
+                        salvarAvisoDTO.getOperacao(),
+                        "Aviso nao encontrado"
                 );
                 formattedResponse = responseFormatter.formatResponse(responseDTO);
                 System.out.println("Server (" + clientAddress + "): " + formattedResponse);
@@ -62,31 +72,14 @@ public class EditarUsuarioCommand implements Command {
                 return;
             }
 
-            if (!userService.isValidRa(editaUsuarioDTO) || !userService.isValidPassword(editaUsuarioDTO) || !userService.isValidName(editaUsuarioDTO.getUsuario().getNome())) {
-
-                System.out.println("RA valido: " + userService.isValidRa(editaUsuarioDTO));
-                System.out.println("Senha valida: " + userService.isValidPassword(editaUsuarioDTO));
-                System.out.println("Nome valido: " + userService.isValidName(editaUsuarioDTO.getUsuario().getNome()));
-
-                responseDTO = responseService.createErrorResponse(
-                        editaUsuarioDTO.getOperacao(),
-                        "Os campos recebidos nao sao validos."
-
-                );
-                formattedResponse = responseFormatter.formatResponse(responseDTO);
-                System.out.println("Server (" + clientAddress + "): " + formattedResponse);
-                out.println(formattedResponse);
-                return;
-            }
-
-            userService.editUserById(oldUser.getId(), newUser);
-            responseDTO = responseService.createSuccessResponseWithMessage(editaUsuarioDTO.getOperacao(),
-                    "Edição realizada com sucesso");
+            noticeService.editNoticeById((int) oldNotice.getId(), newNotice);
+            responseDTO = responseService.createSuccessResponseWithMessage(salvarAvisoDTO.getOperacao(),
+                    "Aviso salvo com sucesso");
             formattedResponse = responseFormatter.formatResponse(responseDTO);
             System.out.println("Server (" + clientAddress + "): " + formattedResponse);
         } catch (PersistenceException e) {
             responseDTO = responseService.createErrorResponse(
-                    editaUsuarioDTO.getOperacao(),
+                    salvarAvisoDTO.getOperacao(),
                     "O servidor nao conseguiu conectar com o banco de dados"
             );
             formattedResponse = responseFormatter.formatResponse(responseDTO);
@@ -94,7 +87,7 @@ public class EditarUsuarioCommand implements Command {
             e.printStackTrace();
         } catch (Exception e) {
             responseDTO = responseService.createErrorResponse(
-                    editaUsuarioDTO.getOperacao(),
+                    salvarAvisoDTO.getOperacao(),
                     "Erro interno no servidor."
             );
             formattedResponse = responseFormatter.formatResponse(responseDTO);

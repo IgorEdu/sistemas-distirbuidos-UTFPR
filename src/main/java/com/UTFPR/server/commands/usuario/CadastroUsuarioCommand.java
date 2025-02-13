@@ -1,7 +1,6 @@
-package com.UTFPR.server.commands;
+package com.UTFPR.server.commands.usuario;
 
 import com.UTFPR.domain.dto.CadastroDTO;
-import com.UTFPR.domain.dto.ResponseDTO;
 import com.UTFPR.server.service.*;
 import com.UTFPR.shared.commands.Command;
 

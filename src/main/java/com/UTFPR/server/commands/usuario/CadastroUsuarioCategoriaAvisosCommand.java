@@ -1,18 +1,12 @@
-package com.UTFPR.server.commands;
+package com.UTFPR.server.commands.usuario;
 
 import com.UTFPR.domain.dto.CadastrarUsuarioCategoriaAvisosDTO;
-import com.UTFPR.domain.dto.CadastroDTO;
 import com.UTFPR.domain.dto.ResponseDTO;
-import com.UTFPR.domain.entities.Category;
-import com.UTFPR.domain.entities.Notice;
-import com.UTFPR.domain.entities.User;
 import com.UTFPR.server.service.*;
 import com.UTFPR.shared.commands.Command;
-import jakarta.persistence.PersistenceException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Objects;
 
 public class CadastroUsuarioCategoriaAvisosCommand implements Command {
     private CadastrarUsuarioCategoriaAvisosDTO cadastrarUsuarioCategoriaAvisosDTO;

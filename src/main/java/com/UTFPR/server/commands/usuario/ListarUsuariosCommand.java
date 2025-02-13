@@ -1,11 +1,8 @@
-package com.UTFPR.server.commands;
+package com.UTFPR.server.commands.usuario;
 
+import com.UTFPR.domain.dto.OperacaoComTokenDTO;
 import com.UTFPR.domain.dto.ResponseDTO;
-import com.UTFPR.domain.dto.SolicitaInformacoesCategoriaDTO;
-import com.UTFPR.domain.dto.SolicitaInformacoesUsuarioDTO;
-import com.UTFPR.domain.entities.Category;
 import com.UTFPR.domain.entities.User;
-import com.UTFPR.server.service.CategoryService;
 import com.UTFPR.server.service.ResponseFormatter;
 import com.UTFPR.server.service.ResponseService;
 import com.UTFPR.server.service.UserService;
@@ -14,19 +11,19 @@ import jakarta.persistence.PersistenceException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Objects;
+import java.util.List;
 
-public class InformacoesCategoriaCommand implements Command {
-    private SolicitaInformacoesCategoriaDTO solicitaInformacoesCategoriaDTO;
-    private CategoryService categoryService;
+public class ListarUsuariosCommand implements Command {
+    private OperacaoComTokenDTO operacaoComTokenDTO;
+    private UserService userService;
     private ResponseService responseService;
     private ResponseFormatter responseFormatter;
     private PrintWriter out;
     private String clientAddress;
 
-    public InformacoesCategoriaCommand(SolicitaInformacoesCategoriaDTO solicitaInformacoesCategoriaDTO, CategoryService categoryService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out, String clientAddress) {
-        this.solicitaInformacoesCategoriaDTO = solicitaInformacoesCategoriaDTO;
-        this.categoryService = categoryService;
+    public ListarUsuariosCommand(OperacaoComTokenDTO operacaoComTokenDTO, UserService userService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out, String clientAddress) {
+        this.operacaoComTokenDTO = operacaoComTokenDTO;
+        this.userService = userService;
         this.responseService = responseService;
         this.responseFormatter = responseFormatter;
         this.out = out;
@@ -39,12 +36,10 @@ public class InformacoesCategoriaCommand implements Command {
         ResponseDTO responseDTO;
 
         try {
-            Category category = categoryService.getCategoryById(Integer.parseInt(solicitaInformacoesCategoriaDTO.getId()));
-
-            if(category == null) {
+            if(!userService.isAdminByToken(operacaoComTokenDTO.getToken())){
                 responseDTO = responseService.createErrorResponse(
-                        solicitaInformacoesCategoriaDTO.getOperacao(),
-                        "Categoria nao encontrada"
+                        operacaoComTokenDTO.getOperacao(),
+                        "Usuario nao autorizado"
                 );
                 formattedResponse = responseFormatter.formatResponse(responseDTO);
                 System.out.println("Server (" + clientAddress + "): " + formattedResponse);
@@ -52,12 +47,14 @@ public class InformacoesCategoriaCommand implements Command {
                 return;
             }
 
-            responseDTO = responseService.returnSuccessResponseCategoryInformations(solicitaInformacoesCategoriaDTO.getOperacao(),category);
+            List<User> users = userService.getAllUsers();
+
+            responseDTO = responseService.returnSuccessResponseListUsers(operacaoComTokenDTO.getOperacao(),users);
             formattedResponse = responseFormatter.formatResponse(responseDTO);
             System.out.println("Server (" + clientAddress + "): " + formattedResponse);
         } catch (PersistenceException e) {
             responseDTO = responseService.createErrorResponse(
-                    solicitaInformacoesCategoriaDTO.getOperacao(),
+                    operacaoComTokenDTO.getOperacao(),
                     "O servidor nao conseguiu conectar com o banco de dados"
             );
             formattedResponse = responseFormatter.formatResponse(responseDTO);
@@ -66,7 +63,7 @@ public class InformacoesCategoriaCommand implements Command {
         }
         catch (Exception e) {
             responseDTO = responseService.createErrorResponse(
-                    solicitaInformacoesCategoriaDTO.getOperacao(),
+                    operacaoComTokenDTO.getOperacao(),
                     "Erro interno no servidor."
             );
             formattedResponse = responseFormatter.formatResponse(responseDTO);
