@@ -48,6 +48,17 @@ public class SalvarAvisoCommand implements Command {
                 return;
             }
 
+            if(categoryService.getCategoryById(salvarAvisoDTO.getAviso().getCategoria()) == null){
+                responseDTO = responseService.createErrorResponse(
+                        salvarAvisoDTO.getOperacao(),
+                        "Categoria não encontrada"
+                );
+                formattedResponse = responseFormatter.formatResponse(responseDTO);
+                System.out.println("Server (" + clientAddress + "): " + formattedResponse);
+                out.println(formattedResponse);
+                return;
+            }
+
             if(salvarAvisoDTO.getAviso().getId() == 0){
                 noticeService.registerNotice(salvarAvisoDTO.getAviso().toNotice(categoryService));
                 responseDTO = responseService.createSuccessResponseWithMessage(salvarAvisoDTO.getOperacao(),
