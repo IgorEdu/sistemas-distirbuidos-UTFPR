@@ -7,6 +7,7 @@ import com.UTFPR.domain.entities.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ResponseService {
@@ -130,6 +131,32 @@ public class ResponseService {
                                                 notice.getTitulo(),
                                                 notice.getDescricao(),
                                                 category))
+                    .collect(Collectors.toList())
+                    : List.of();
+
+//            String avisos = objectMapper.writeValueAsString(noticeDTOs);
+
+            ResponseDTO response = new ResponseDTO();
+            response.setStatus(201);
+            response.setOperacao(operacao);
+            response.setAvisosComInfoCategoria(noticeDTOs);
+            return response;
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao serializar categorias", e);
+        }
+    }
+
+    public ResponseDTO returnSuccessResponseListNotices(String operacao, List<Notice> notices) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            List<AvisoComInfoCategoriaDTO> noticeDTOs = (notices != null)
+                    ? notices.stream()
+                    .map(notice -> new AvisoComInfoCategoriaDTO(
+                            (int) notice.getId(),
+                            notice.getTitulo(),
+                            notice.getDescricao(),
+                            notice.getCategoria()))
                     .collect(Collectors.toList())
                     : List.of();
 

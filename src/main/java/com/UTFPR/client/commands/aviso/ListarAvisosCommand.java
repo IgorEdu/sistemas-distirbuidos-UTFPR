@@ -27,10 +27,10 @@ public class ListarAvisosCommand implements Command {
         do {
             System.out.println("Digite o ID (somente números): ");
             id = stdIn.readLine();
-            if (!id.matches("^[0-9]+$") || id.equals("0")) {
+            if (!id.matches("^[0-9]+$")) {
                 System.out.println("ID inválido. Digite novamente:");
             }
-        } while (!id.matches("^[0-9]+$") || id.equals("0"));
+        } while (!id.matches("^[0-9]+$"));
 
         OperacaoListarAvisosDTO operacaoListarAvisosDTO = new OperacaoListarAvisosDTO("listarAvisos", token, Integer.parseInt(id));
 

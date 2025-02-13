@@ -10,7 +10,9 @@ import jakarta.persistence.PersistenceException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ListarAvisosCommand implements Command {
     private OperacaoListarAvisosDTO operacaoListarAvisosDTO;
@@ -35,13 +37,16 @@ public class ListarAvisosCommand implements Command {
     public void execute() throws IOException {
         String formattedResponse;
         ResponseDTO responseDTO;
+        List<Notice> notices;
 
         try {
-            List<Notice> notices = noticeService.getAllNoticesOfCategory(operacaoListarAvisosDTO.getId());
+            if(operacaoListarAvisosDTO.getId() == 0){
+                notices = noticeService.getAllNotices();
+            } else {
+                notices = noticeService.getAllNoticesOfCategory(operacaoListarAvisosDTO.getId());
+            }
 
-            Category category = categoryService.getCategoryById(operacaoListarAvisosDTO.getId());
-
-            responseDTO = responseService.returnSuccessResponseListNotices(operacaoListarAvisosDTO.getOperacao(),notices,category);
+            responseDTO = responseService.returnSuccessResponseListNotices(operacaoListarAvisosDTO.getOperacao(),notices);
             formattedResponse = responseFormatter.formatResponse(responseDTO);
             System.out.println("Server (" + clientAddress + "): " + formattedResponse);
         } catch (PersistenceException e) {
