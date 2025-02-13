@@ -14,6 +14,7 @@ import com.UTFPR.server.commands.usuario.*;
 import com.UTFPR.server.infra.DatabaseConnection;
 import com.UTFPR.server.repository.CategoryRepository;
 import com.UTFPR.server.repository.NoticeRepository;
+import com.UTFPR.server.repository.UserCategoryRepository;
 import com.UTFPR.server.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -24,6 +25,7 @@ public class CommandFactory {
     private UserService userService;
     private CategoryService categoryService;
     private NoticeService noticeService;
+    private UserCategoryService userCategoryService;
     private ResponseService responseService;
     private ResponseFormatter responseFormatter;
     private PrintWriter out;
@@ -32,6 +34,7 @@ public class CommandFactory {
         this.userService = userService;
         this.categoryService = new CategoryService(new CategoryRepository(DatabaseConnection.getEntityManager()));
         this.noticeService = new NoticeService(new NoticeRepository(DatabaseConnection.getEntityManager()));
+        this.userCategoryService = new UserCategoryService(new UserCategoryRepository(DatabaseConnection.getEntityManager()));
         this.responseService = responseService;
         this.responseFormatter = responseFormatter;
         this.out = out;
@@ -193,16 +196,16 @@ public class CommandFactory {
                     System.out.println("Server (" + clientAddress + "): " + response);
                     out.println(response);
                 }
-//            case "cadastrarUsuarioCategoria":
-//                try {
-//                    CadastrarUsuarioCategoriaAvisosDTO cadastrarUsuarioCategoriaAvisosDTO = new ObjectMapper().readValue(inputLine, CadastrarUsuarioCategoriaAvisosDTO.class);
-//                    return new CadastrarUsuarioCategoriaAvisosCommand(cadastrarUsuarioCategoriaAvisosDTO, userService, noticeService, responseService, responseFormatter, out, clientAddress);
-//                } catch (IOException e) {
-//                    ResponseDTO responseDTO = responseService.createErrorResponse("cadastrarUsuarioCategoria", "Não foi possível ler o json recebido");
-//                    String response = responseFormatter.formatResponse(responseDTO);
-//                    System.out.println("Server (" + clientAddress + "): " + response);
-//                    out.println(response);
-//                }
+            case "cadastrarUsuarioCategoria":
+                try {
+                    CadastrarUsuarioCategoriaAvisosDTO cadastrarUsuarioCategoriaAvisosDTO = new ObjectMapper().readValue(inputLine, CadastrarUsuarioCategoriaAvisosDTO.class);
+                    return new CadastroUsuarioCategoriaAvisosCommand(cadastrarUsuarioCategoriaAvisosDTO, userService, categoryService, userCategoryService, responseService, responseFormatter, out, clientAddress);
+                } catch (IOException e) {
+                    ResponseDTO responseDTO = responseService.createErrorResponse("cadastrarUsuarioCategoria", "Não foi possível ler o json recebido");
+                    String response = responseFormatter.formatResponse(responseDTO);
+                    System.out.println("Server (" + clientAddress + "): " + response);
+                    out.println(response);
+                }
             default:
                 return new FallbackCommand(operacaoDTO.getOperacao(),
                         "Operacao nao encontrada",

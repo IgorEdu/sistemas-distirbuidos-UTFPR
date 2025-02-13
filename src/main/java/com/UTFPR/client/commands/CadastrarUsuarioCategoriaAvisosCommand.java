@@ -41,13 +41,13 @@ public class CadastrarUsuarioCategoriaAvisosCommand implements Command {
             System.out.println("Digite o ID da categoria: ");
             temp = stdIn.readLine();
 
-            if (!temp.matches("^[0-9]+$") || !temp.equals("0")) {
+            if (!temp.matches("^[0-9]+$") || temp.equals("0")) {
                 System.out.println("ID inválido. Digite novamente:");
             }
             idCategoria = Integer.parseInt(temp);
-        } while (!temp.matches("^[0-9]+$") || !temp.equals("0"));
+        } while (!temp.matches("^[0-9]+$") || temp.equals("0"));
 
-         CadastrarUsuarioCategoriaAvisosDTO cadastrarUsuarioCategoriaAvisoDTO = new CadastrarUsuarioCategoriaAvisosDTO("cadastrarUsuarioCatagoria", token, ra, idCategoria);
+         CadastrarUsuarioCategoriaAvisosDTO cadastrarUsuarioCategoriaAvisoDTO = new CadastrarUsuarioCategoriaAvisosDTO("cadastrarUsuarioCategoria", token, ra, idCategoria);
 
         String json = objectMapper.writeValueAsString(cadastrarUsuarioCategoriaAvisoDTO);
         System.out.println("Client: " + json);

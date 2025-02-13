@@ -1,5 +1,6 @@
 package com.UTFPR.domain.dto;
 
+import com.UTFPR.domain.entities.UserCategory;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)

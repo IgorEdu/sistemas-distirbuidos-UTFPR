@@ -1,6 +1,7 @@
 package com.UTFPR.server.service;
 
 import com.UTFPR.domain.entities.Category;
+import com.UTFPR.domain.entities.UserCategory;
 import com.UTFPR.server.repository.CategoryRepository;
 import com.UTFPR.server.repository.UserCategoryRepository;
 import jakarta.transaction.Transactional;
@@ -15,15 +16,15 @@ public class UserCategoryService {
     }
 
 
-//    public boolean isExistentCategory(Category category) {
-//        List<Category> categories = categoryRepository.findCategoryById(category.getId());
-//        return !categories.isEmpty();
-//    }
-//
-//    @Transactional
-//    public void registerCategory(Category category) {
-//        categoryRepository.save(category);
-//    }
+    public boolean isExistentRealtionshipUserCategory(UserCategory userCategory) {
+        List<UserCategory> userCategories = userCategoryRepository.findUserCategoryByRelationshipUserCategory(userCategory);
+        return !userCategories.isEmpty();
+    }
+
+    @Transactional
+    public void registerUserCategory(UserCategory userCategory) {
+        userCategoryRepository.save(userCategory);
+    }
 //
 //
 //    public Category getCategoryById(int id) {

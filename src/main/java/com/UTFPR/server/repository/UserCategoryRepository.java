@@ -24,48 +24,59 @@ public class UserCategoryRepository {
 //        }
 //    }
 
-    public List<Category> findCategoryById(Long id) {
+//    public List<Category> findCategoryById(Long id) {
+//        try {
+//            TypedQuery<Category> query = em.createQuery("SELECT c FROM categorias c WHERE c.id = :id", Category.class);
+//            query.setParameter("id", id);
+//            return query.getResultList();
+//        } catch (Exception e) {
+//            throw e;
+//        }
+//    }
+
+    public List<UserCategory> findUserCategoryByRelationshipUserCategory(UserCategory userCategory) {
         try {
-            TypedQuery<Category> query = em.createQuery("SELECT c FROM categorias c WHERE c.id = :id", Category.class);
-            query.setParameter("id", id);
+            TypedQuery<UserCategory> query = em.createQuery("SELECT uc FROM usuarios_categorias uc WHERE uc.user = :usuario AND uc.category = :categoria", UserCategory.class);
+            query.setParameter("usuario", userCategory.getUser());
+            query.setParameter("categoria", userCategory.getCategory());
             return query.getResultList();
         } catch (Exception e) {
             throw e;
         }
     }
 
-    public void save(Category category) {
+    public void save(UserCategory userCategory) {
         em.getTransaction().begin();
-        em.persist(category);
+        em.persist(userCategory);
         em.getTransaction().commit();
     }
 
-    public void deleteCategory(Category category) {
-        em.getTransaction().begin();
-        em.remove(category);
-        em.flush();
-        em.clear();
-        em.getTransaction().commit();
-    }
-
-    public void editCategoryById(Long id, Category category) {
-        em.getTransaction().begin();
-        try {
-            Query query = em.createQuery(
-                    "UPDATE categorias c " +
-                            "SET c.nome = :nome " +
-                            "WHERE c.id = :id"
-            );
-            query.setParameter("nome", category.getNome());
-            query.setParameter("id", id);
-
-            query.executeUpdate();
-            em.flush();
-            em.clear();
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw e;
-        }
-    }
+//    public void deleteCategory(Category category) {
+//        em.getTransaction().begin();
+//        em.remove(category);
+//        em.flush();
+//        em.clear();
+//        em.getTransaction().commit();
+//    }
+//
+//    public void editCategoryById(Long id, Category category) {
+//        em.getTransaction().begin();
+//        try {
+//            Query query = em.createQuery(
+//                    "UPDATE categorias c " +
+//                            "SET c.nome = :nome " +
+//                            "WHERE c.id = :id"
+//            );
+//            query.setParameter("nome", category.getNome());
+//            query.setParameter("id", id);
+//
+//            query.executeUpdate();
+//            em.flush();
+//            em.clear();
+//            em.getTransaction().commit();
+//        } catch (Exception e) {
+//            em.getTransaction().rollback();
+//            throw e;
+//        }
+//    }
 }

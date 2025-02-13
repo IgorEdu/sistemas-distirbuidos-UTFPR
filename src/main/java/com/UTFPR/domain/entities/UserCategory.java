@@ -1,9 +1,6 @@
 package com.UTFPR.domain.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity(name = "usuarios_categorias")
 public class UserCategory {
@@ -11,13 +8,24 @@ public class UserCategory {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
-    private long idUser;
+    @ManyToOne
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private User user;
 
-    private long idCategory;
+    @ManyToOne
+    @JoinColumn(name = "id_categoria", nullable = false)
+    private Category category;
 
-//    public UserCategory(long id, String nome) {
-//        this.nome = nome;
-//    }
+    public UserCategory(long id, User user, Category category) {
+        this.id = id;
+        this.user = user;
+        this.category = category;
+    }
+
+    public UserCategory(User user, Category category) {
+        this.user = user;
+        this.category = category;
+    }
 
     public UserCategory() {
     }
@@ -30,12 +38,19 @@ public class UserCategory {
         this.id = id;
     }
 
-//    public String getNome() {
-//        return nome;
-//    }
-//
-//    public void setNome(String nome) {
-//        this.nome = nome;
-//    }
+    public User getUser() {
+        return user;
+    }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 }
