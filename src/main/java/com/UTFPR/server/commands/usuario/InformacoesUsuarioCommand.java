@@ -1,7 +1,7 @@
 package com.UTFPR.server.commands.usuario;
 
 import com.UTFPR.domain.dto.ResponseDTO;
-import com.UTFPR.domain.dto.SolicitaInformacoesUsuarioDTO;
+import com.UTFPR.domain.dto.OperacaoComTokenERaDTO;
 import com.UTFPR.domain.entities.User;
 import com.UTFPR.server.service.ResponseFormatter;
 import com.UTFPR.server.service.ResponseService;
@@ -14,14 +14,14 @@ import java.io.PrintWriter;
 import java.util.Objects;
 
 public class InformacoesUsuarioCommand implements Command {
-    private SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO;
+    private OperacaoComTokenERaDTO solicitaInformacoesUsuarioDTO;
     private UserService userService;
     private ResponseService responseService;
     private ResponseFormatter responseFormatter;
     private PrintWriter out;
     private String clientAddress;
 
-    public InformacoesUsuarioCommand(SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO, UserService userService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out, String clientAddress) {
+    public InformacoesUsuarioCommand(OperacaoComTokenERaDTO solicitaInformacoesUsuarioDTO, UserService userService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out, String clientAddress) {
         this.solicitaInformacoesUsuarioDTO = solicitaInformacoesUsuarioDTO;
         this.userService = userService;
         this.responseService = responseService;

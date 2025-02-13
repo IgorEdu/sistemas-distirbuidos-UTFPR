@@ -1,6 +1,6 @@
 package com.UTFPR.client.commands.usuario;
 
-import com.UTFPR.domain.dto.SolicitaInformacoesUsuarioDTO;
+import com.UTFPR.domain.dto.OperacaoComTokenERaDTO;
 import com.UTFPR.shared.commands.Command;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -40,7 +40,7 @@ public class ExcluirUsuarioCommand implements Command {
 
         raExclusao = ra;
 
-        SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO = new SolicitaInformacoesUsuarioDTO("excluirUsuario", token, ra);
+        OperacaoComTokenERaDTO solicitaInformacoesUsuarioDTO = new OperacaoComTokenERaDTO("excluirUsuario", token, ra);
 
         String json = objectMapper.writeValueAsString(solicitaInformacoesUsuarioDTO);
         System.out.println("Client: " + json);

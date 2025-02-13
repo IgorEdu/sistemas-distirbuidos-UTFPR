@@ -77,7 +77,7 @@ public class CommandFactory {
                 return new LogoutCommand(logoutDTO, userService, responseService, responseFormatter, out, clientAddress);
             case "localizarUsuario":
                 try {
-                    SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO = new ObjectMapper().readValue(inputLine, SolicitaInformacoesUsuarioDTO.class);
+                    OperacaoComTokenERaDTO solicitaInformacoesUsuarioDTO = new ObjectMapper().readValue(inputLine, OperacaoComTokenERaDTO.class);
                     return new InformacoesUsuarioCommand(solicitaInformacoesUsuarioDTO, userService, responseService, responseFormatter, out, clientAddress);
                 } catch (IOException e) {
                     ResponseDTO responseDTO = responseService.createErrorResponse("localizarUsuario", "Não foi possível ler o json recebido");
@@ -97,7 +97,7 @@ public class CommandFactory {
                 }
             case "excluirUsuario":
                 try {
-                    SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO = new ObjectMapper().readValue(inputLine, SolicitaInformacoesUsuarioDTO.class);
+                    OperacaoComTokenERaDTO solicitaInformacoesUsuarioDTO = new ObjectMapper().readValue(inputLine, OperacaoComTokenERaDTO.class);
                     return new ExcluirUsuarioCommand(solicitaInformacoesUsuarioDTO, userService, responseService, responseFormatter, out, clientAddress);
                 } catch (IOException e) {
                     ResponseDTO responseDTO = responseService.createErrorResponse("excluirUsuario", "Não foi possível ler o json recebido");

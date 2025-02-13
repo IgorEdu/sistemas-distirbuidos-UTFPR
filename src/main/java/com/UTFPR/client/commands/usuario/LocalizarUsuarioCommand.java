@@ -1,6 +1,6 @@
 package com.UTFPR.client.commands.usuario;
 
-import com.UTFPR.domain.dto.SolicitaInformacoesUsuarioDTO;
+import com.UTFPR.domain.dto.OperacaoComTokenERaDTO;
 import com.UTFPR.shared.commands.Command;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -32,7 +32,7 @@ public class LocalizarUsuarioCommand implements Command {
             }
         } while (!ra.matches("^[0-9]+$"));
 
-        SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO = new SolicitaInformacoesUsuarioDTO("localizarUsuario", token, ra);
+        OperacaoComTokenERaDTO solicitaInformacoesUsuarioDTO = new OperacaoComTokenERaDTO("localizarUsuario", token, ra);
 
         String json = objectMapper.writeValueAsString(solicitaInformacoesUsuarioDTO);
         System.out.println("Client: " + json);

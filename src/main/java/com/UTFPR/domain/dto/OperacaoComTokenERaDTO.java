@@ -1,22 +1,20 @@
 package com.UTFPR.domain.dto;
 
-import com.UTFPR.domain.contracts.CredentialProvider;
-import com.UTFPR.domain.entities.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class SolicitaInformacoesUsuarioDTO {
+public class OperacaoComTokenERaDTO {
     private String operacao;
     private String token;
     private String ra;
 
-    public SolicitaInformacoesUsuarioDTO(String operacao, String token, String ra) {
+    public OperacaoComTokenERaDTO(String operacao, String token, String ra) {
         this.operacao = operacao;
         this.token = token;
         this.ra = ra;
     }
 
-    public SolicitaInformacoesUsuarioDTO() {
+    public OperacaoComTokenERaDTO() {
     }
 
     public String getOperacao() {
