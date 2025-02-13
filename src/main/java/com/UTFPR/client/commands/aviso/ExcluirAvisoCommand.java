@@ -1,7 +1,6 @@
-package com.UTFPR.client.commands;
+package com.UTFPR.client.commands.aviso;
 
-import com.UTFPR.domain.dto.SolicitaInformacoesCategoriaDTO;
-import com.UTFPR.domain.dto.SolicitaInformacoesUsuarioDTO;
+import com.UTFPR.domain.dto.SolicitaInformacoesAvisoDTO;
 import com.UTFPR.shared.commands.Command;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -9,13 +8,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class ExcluirCategoriaCommand implements Command {
+public class ExcluirAvisoCommand implements Command {
     private PrintWriter out;
     private BufferedReader stdIn;
     private ObjectMapper objectMapper;
     private final String token;
 
-    public ExcluirCategoriaCommand(PrintWriter out, BufferedReader stdIn, ObjectMapper objectMapper, String token) {
+    public ExcluirAvisoCommand(PrintWriter out, BufferedReader stdIn, ObjectMapper objectMapper, String token) {
         this.out = out;
         this.stdIn = stdIn;
         this.objectMapper = objectMapper;
@@ -33,9 +32,9 @@ public class ExcluirCategoriaCommand implements Command {
             }
         } while (!id.matches("^[0-9]+$") || id.equals("0"));
 
-        SolicitaInformacoesCategoriaDTO solicitaInformacoesCategoriaDTO = new SolicitaInformacoesCategoriaDTO("excluirCategoria", token, id);
+        SolicitaInformacoesAvisoDTO solicitaInformacoesAvisoDTO = new SolicitaInformacoesAvisoDTO("excluirAviso", token, id);
 
-        String json = objectMapper.writeValueAsString(solicitaInformacoesCategoriaDTO);
+        String json = objectMapper.writeValueAsString(solicitaInformacoesAvisoDTO);
         System.out.println("Client: " + json);
         out.println(json);
     }

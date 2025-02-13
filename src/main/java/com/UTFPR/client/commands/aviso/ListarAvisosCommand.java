@@ -1,7 +1,6 @@
-package com.UTFPR.client.commands;
+package com.UTFPR.client.commands.aviso;
 
-import com.UTFPR.domain.dto.SolicitaInformacoesAvisoDTO;
-import com.UTFPR.domain.dto.SolicitaInformacoesCategoriaDTO;
+import com.UTFPR.domain.dto.OperacaoListarAvisosDTO;
 import com.UTFPR.shared.commands.Command;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -9,13 +8,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class ExcluirAvisoCommand implements Command {
+public class ListarAvisosCommand implements Command {
     private PrintWriter out;
     private BufferedReader stdIn;
     private ObjectMapper objectMapper;
-    private final String token;
+    private final String token;;
 
-    public ExcluirAvisoCommand(PrintWriter out, BufferedReader stdIn, ObjectMapper objectMapper, String token) {
+    public ListarAvisosCommand(PrintWriter out, BufferedReader stdIn, ObjectMapper objectMapper, String token) {
         this.out = out;
         this.stdIn = stdIn;
         this.objectMapper = objectMapper;
@@ -28,14 +27,14 @@ public class ExcluirAvisoCommand implements Command {
         do {
             System.out.println("Digite o ID (somente números): ");
             id = stdIn.readLine();
-            if (!id.matches("^[0-9]+$")) {
+            if (!id.matches("^[0-9]+$") || id.equals("0")) {
                 System.out.println("ID inválido. Digite novamente:");
             }
         } while (!id.matches("^[0-9]+$") || id.equals("0"));
 
-        SolicitaInformacoesAvisoDTO solicitaInformacoesAvisoDTO = new SolicitaInformacoesAvisoDTO("excluirAviso", token, id);
+        OperacaoListarAvisosDTO operacaoListarAvisosDTO = new OperacaoListarAvisosDTO("listarAvisos", token, Integer.parseInt(id));
 
-        String json = objectMapper.writeValueAsString(solicitaInformacoesAvisoDTO);
+        String json = objectMapper.writeValueAsString(operacaoListarAvisosDTO);
         System.out.println("Client: " + json);
         out.println(json);
     }

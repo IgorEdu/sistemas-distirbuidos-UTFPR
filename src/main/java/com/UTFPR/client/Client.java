@@ -1,6 +1,15 @@
 package com.UTFPR.client;
 
 import com.UTFPR.client.commands.*;
+import com.UTFPR.client.commands.aviso.ExcluirAvisoCommand;
+import com.UTFPR.client.commands.aviso.ListarAvisosCommand;
+import com.UTFPR.client.commands.aviso.LocalizarAvisoCommand;
+import com.UTFPR.client.commands.aviso.SalvarAvisoCommand;
+import com.UTFPR.client.commands.categoria.ExcluirCategoriaCommand;
+import com.UTFPR.client.commands.categoria.ListarCategoriasCommand;
+import com.UTFPR.client.commands.categoria.LocalizarCategoriaCommand;
+import com.UTFPR.client.commands.categoria.SalvarCategoriaCommand;
+import com.UTFPR.client.commands.usuario.*;
 import com.UTFPR.domain.dto.*;
 import com.UTFPR.shared.commands.Command;
 import com.fasterxml.jackson.databind.ObjectMapper;

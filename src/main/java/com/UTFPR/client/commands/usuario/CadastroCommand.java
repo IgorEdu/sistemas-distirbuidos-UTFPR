@@ -1,4 +1,4 @@
-package com.UTFPR.client.commands;
+package com.UTFPR.client.commands.usuario;
 
 import com.UTFPR.domain.dto.CadastroDTO;
 import com.UTFPR.shared.commands.Command;

@@ -1,4 +1,4 @@
-package com.UTFPR.client.commands;
+package com.UTFPR.client.commands.usuario;
 
 import com.UTFPR.domain.dto.OperacaoComTokenDTO;
 import com.UTFPR.shared.commands.Command;
@@ -8,13 +8,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class ListarCategoriasCommand implements Command {
+public class ListarUsuariosCommand implements Command {
     private PrintWriter out;
     private BufferedReader stdIn;
     private ObjectMapper objectMapper;
     private final String token;
 
-    public ListarCategoriasCommand(PrintWriter out, BufferedReader stdIn, ObjectMapper objectMapper, String token) {
+    public ListarUsuariosCommand(PrintWriter out, BufferedReader stdIn, ObjectMapper objectMapper, String token) {
         this.out = out;
         this.stdIn = stdIn;
         this.objectMapper = objectMapper;
@@ -24,7 +24,7 @@ public class ListarCategoriasCommand implements Command {
     @Override
     public void execute() throws IOException {
 
-        OperacaoComTokenDTO operacaoComTokenDTO = new OperacaoComTokenDTO("listarCategorias", token);
+        OperacaoComTokenDTO operacaoComTokenDTO = new OperacaoComTokenDTO("listarUsuarios", token);
 
         String json = objectMapper.writeValueAsString(operacaoComTokenDTO);
         System.out.println("Client: " + json);

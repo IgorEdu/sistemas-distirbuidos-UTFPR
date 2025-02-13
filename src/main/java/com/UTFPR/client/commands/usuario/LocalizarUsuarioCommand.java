@@ -1,4 +1,4 @@
-package com.UTFPR.client.commands;
+package com.UTFPR.client.commands.usuario;
 
 import com.UTFPR.domain.dto.SolicitaInformacoesUsuarioDTO;
 import com.UTFPR.shared.commands.Command;
@@ -8,23 +8,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class ExcluirUsuarioCommand implements Command {
+public class LocalizarUsuarioCommand implements Command {
     private PrintWriter out;
     private BufferedReader stdIn;
     private ObjectMapper objectMapper;
-    private String token;
-    private String raExclusao;
+    private final String token;
 
-
-    public ExcluirUsuarioCommand(PrintWriter out, BufferedReader stdIn, ObjectMapper objectMapper, String token) {
+    public LocalizarUsuarioCommand(PrintWriter out, BufferedReader stdIn, ObjectMapper objectMapper, String token) {
         this.out = out;
         this.stdIn = stdIn;
         this.objectMapper = objectMapper;
         this.token = token;
-    }
-
-    public String getRaExclusao(){
-        return raExclusao;
     }
 
     @Override
@@ -38,9 +32,7 @@ public class ExcluirUsuarioCommand implements Command {
             }
         } while (!ra.matches("^[0-9]+$"));
 
-        raExclusao = ra;
-
-        SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO = new SolicitaInformacoesUsuarioDTO("excluirUsuario", token, ra);
+        SolicitaInformacoesUsuarioDTO solicitaInformacoesUsuarioDTO = new SolicitaInformacoesUsuarioDTO("localizarUsuario", token, ra);
 
         String json = objectMapper.writeValueAsString(solicitaInformacoesUsuarioDTO);
         System.out.println("Client: " + json);

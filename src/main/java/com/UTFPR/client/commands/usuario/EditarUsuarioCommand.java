@@ -1,7 +1,6 @@
-package com.UTFPR.client.commands;
+package com.UTFPR.client.commands.usuario;
 
 import com.UTFPR.domain.dto.EditaUsuarioDTO;
-import com.UTFPR.domain.dto.SolicitaInformacoesUsuarioDTO;
 import com.UTFPR.domain.entities.User;
 import com.UTFPR.shared.commands.Command;
 import com.fasterxml.jackson.databind.ObjectMapper;

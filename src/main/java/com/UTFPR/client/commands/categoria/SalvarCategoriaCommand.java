@@ -1,7 +1,6 @@
-package com.UTFPR.client.commands;
+package com.UTFPR.client.commands.categoria;
 
 import com.UTFPR.domain.dto.CategoriaDTO;
-import com.UTFPR.domain.dto.OperacaoComTokenDTO;
 import com.UTFPR.domain.dto.SalvarCategoriaDTO;
 import com.UTFPR.shared.commands.Command;
 import com.fasterxml.jackson.databind.ObjectMapper;

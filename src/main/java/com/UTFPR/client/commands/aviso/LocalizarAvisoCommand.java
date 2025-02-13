@@ -1,7 +1,6 @@
-package com.UTFPR.client.commands;
+package com.UTFPR.client.commands.aviso;
 
 import com.UTFPR.domain.dto.SolicitaInformacoesAvisoDTO;
-import com.UTFPR.domain.dto.SolicitaInformacoesCategoriaDTO;
 import com.UTFPR.shared.commands.Command;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
