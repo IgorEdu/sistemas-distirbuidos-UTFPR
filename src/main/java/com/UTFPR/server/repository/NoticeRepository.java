@@ -26,7 +26,7 @@ public class NoticeRepository {
 
     public List<Notice> listAllNoticesOfCategory(int categoryId) {
         try {
-            TypedQuery<Notice> query = em.createQuery("SELECT a FROM avisos a WHERE a.id_categoria = :categotyId", Notice.class);
+            TypedQuery<Notice> query = em.createQuery("SELECT a FROM avisos a WHERE a.categoria.id = :categoryId", Notice.class);
             query.setParameter("categoryId", categoryId);
             return query.getResultList();
         } catch (Exception e) {
