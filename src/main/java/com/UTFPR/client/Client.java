@@ -78,7 +78,9 @@ public class Client {
 
             System.out.println("Usuário conectado...");
             System.out.println();
+            buscaListagemDeAvisosDoUsuario(out, stdIn, objectMapper, token);
             apresentarMenu(token);
+
 
             while ((userInput = stdIn.readLine()) != null && token != null) {
                 Command command;
@@ -236,6 +238,14 @@ public class Client {
         }
 
         return token;
+    }
+
+    private static void buscaListagemDeAvisosDoUsuario(PrintWriter out, BufferedReader stdIn, ObjectMapper objectMapper, String token) throws IOException {
+        Command command = new ListarAvisosUsuarioInicialCommand(out, stdIn, objectMapper, token);
+        command.execute();
+
+        String responseServer = stdIn.readLine();
+        System.out.println("Server: " + responseServer);
     }
 
     private static void apresentarMenu(String token) {
