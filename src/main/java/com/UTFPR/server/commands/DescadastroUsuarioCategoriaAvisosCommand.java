@@ -12,8 +12,8 @@ import jakarta.persistence.PersistenceException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class CadastroUsuarioCategoriaAvisosCommand implements Command {
-    private CadastrarOuDescadastrarUsuarioCategoriaAvisosDTO cadastrarOuDescadastrarUsuarioCategoriaAvisosDTO;
+public class DescadastroUsuarioCategoriaAvisosCommand implements Command {
+    private CadastrarOuDescadastrarUsuarioCategoriaAvisosDTO descadastrarUsuarioCategoriaAvisosDTO;
     private UserService userService;
     private CategoryService categoryService;
     private UserCategoryService userCategoryService;
@@ -22,8 +22,8 @@ public class CadastroUsuarioCategoriaAvisosCommand implements Command {
     private PrintWriter out;
     private String clientAddress;
 
-    public CadastroUsuarioCategoriaAvisosCommand(CadastrarOuDescadastrarUsuarioCategoriaAvisosDTO cadastrarOuDescadastrarUsuarioCategoriaAvisosDTO, UserService userService, CategoryService categoryService, UserCategoryService userCategoryService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out, String clientAddress) {
-        this.cadastrarOuDescadastrarUsuarioCategoriaAvisosDTO = cadastrarOuDescadastrarUsuarioCategoriaAvisosDTO;
+    public DescadastroUsuarioCategoriaAvisosCommand(CadastrarOuDescadastrarUsuarioCategoriaAvisosDTO descadastrarUsuarioCategoriaAvisosDTO, UserService userService, CategoryService categoryService, UserCategoryService userCategoryService, ResponseService responseService, ResponseFormatter responseFormatter, PrintWriter out, String clientAddress) {
+        this.descadastrarUsuarioCategoriaAvisosDTO = descadastrarUsuarioCategoriaAvisosDTO;
         this.userService = userService;
         this.categoryService = categoryService;
         this.userCategoryService = userCategoryService;
@@ -39,10 +39,10 @@ public class CadastroUsuarioCategoriaAvisosCommand implements Command {
         ResponseDTO responseDTO;
 
         try {
-            if (!(cadastrarOuDescadastrarUsuarioCategoriaAvisosDTO.getRa().equals(cadastrarOuDescadastrarUsuarioCategoriaAvisosDTO.getToken())) &&
-                    !userService.isAdminByToken(cadastrarOuDescadastrarUsuarioCategoriaAvisosDTO.getToken())) {
+            if (!(descadastrarUsuarioCategoriaAvisosDTO.getRa().equals(descadastrarUsuarioCategoriaAvisosDTO.getToken())) &&
+                    !userService.isAdminByToken(descadastrarUsuarioCategoriaAvisosDTO.getToken())) {
                 responseDTO = responseService.createErrorResponse(
-                        cadastrarOuDescadastrarUsuarioCategoriaAvisosDTO.getOperacao(),
+                        descadastrarUsuarioCategoriaAvisosDTO.getOperacao(),
                         "Usuario nao autorizado"
                 );
                 formattedResponse = responseFormatter.formatResponse(responseDTO);
@@ -51,12 +51,12 @@ public class CadastroUsuarioCategoriaAvisosCommand implements Command {
                 return;
             }
 
-            User user = userService.getUserByRa(cadastrarOuDescadastrarUsuarioCategoriaAvisosDTO.getRa());
+            User user = userService.getUserByRa(descadastrarUsuarioCategoriaAvisosDTO.getRa());
 
 
             if (user == null) {
                 responseDTO = responseService.createErrorResponse(
-                        cadastrarOuDescadastrarUsuarioCategoriaAvisosDTO.getOperacao(),
+                        descadastrarUsuarioCategoriaAvisosDTO.getOperacao(),
                         "Usuario nao encontrado"
                 );
                 formattedResponse = responseFormatter.formatResponse(responseDTO);
@@ -65,11 +65,11 @@ public class CadastroUsuarioCategoriaAvisosCommand implements Command {
                 return;
             }
 
-            Category category = categoryService.getCategoryById(cadastrarOuDescadastrarUsuarioCategoriaAvisosDTO.getCategoria());
+            Category category = categoryService.getCategoryById(descadastrarUsuarioCategoriaAvisosDTO.getCategoria());
 
             if (category == null) {
                 responseDTO = responseService.createErrorResponse(
-                        cadastrarOuDescadastrarUsuarioCategoriaAvisosDTO.getOperacao(),
+                        descadastrarUsuarioCategoriaAvisosDTO.getOperacao(),
                         "Categoria nao encontrada"
                 );
                 formattedResponse = responseFormatter.formatResponse(responseDTO);
@@ -80,10 +80,10 @@ public class CadastroUsuarioCategoriaAvisosCommand implements Command {
 
             UserCategory userCategory = new UserCategory(user, category);
 
-            if(userCategoryService.isExistentRealtionshipUserCategory(userCategory)){
+            if(!userCategoryService.isExistentRealtionshipUserCategory(userCategory)){
                 responseDTO = responseService.createErrorResponse(
-                        cadastrarOuDescadastrarUsuarioCategoriaAvisosDTO.getOperacao(),
-                        "Usuário já está vinculado à essa categoria"
+                        descadastrarUsuarioCategoriaAvisosDTO.getOperacao(),
+                        "Usuário não está vinculado à essa categoria"
                 );
                 formattedResponse = responseFormatter.formatResponse(responseDTO);
                 System.out.println("Server (" + clientAddress + "): " + formattedResponse);
@@ -91,16 +91,17 @@ public class CadastroUsuarioCategoriaAvisosCommand implements Command {
                 return;
             }
 
-            userCategoryService.registerUserCategory(userCategory);
-            responseDTO = responseService.createSuccessResponseWithMessage(cadastrarOuDescadastrarUsuarioCategoriaAvisosDTO.getOperacao(),
-                    "Cadastro em categoria realizado com sucesso.");
+            userCategory = userCategoryService.getRelationshipUserCategory(userCategory);
+            userCategoryService.deleteUserCategory(userCategory);
+            responseDTO = responseService.createSuccessResponseWithMessage(descadastrarUsuarioCategoriaAvisosDTO.getOperacao(),
+                    "Descadastro realizado com sucesso.");
             formattedResponse = responseFormatter.formatResponse(responseDTO);
             System.out.println("Server (" + clientAddress + "): " + formattedResponse);
             out.println(formattedResponse);
             return;
         } catch (PersistenceException e) {
             responseDTO = responseService.createErrorResponse(
-                    cadastrarOuDescadastrarUsuarioCategoriaAvisosDTO.getOperacao(),
+                    descadastrarUsuarioCategoriaAvisosDTO.getOperacao(),
                     "O servidor nao conseguiu conectar com o banco de dados"
             );
             formattedResponse = responseFormatter.formatResponse(responseDTO);
@@ -108,7 +109,7 @@ public class CadastroUsuarioCategoriaAvisosCommand implements Command {
             e.printStackTrace();
         } catch (Exception e) {
             responseDTO = responseService.createErrorResponse(
-                    cadastrarOuDescadastrarUsuarioCategoriaAvisosDTO.getOperacao(),
+                    descadastrarUsuarioCategoriaAvisosDTO.getOperacao(),
                     "Erro interno no servidor."
             );
             formattedResponse = responseFormatter.formatResponse(responseDTO);

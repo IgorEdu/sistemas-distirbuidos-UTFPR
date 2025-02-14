@@ -198,10 +198,30 @@ public class CommandFactory {
                 }
             case "cadastrarUsuarioCategoria":
                 try {
-                    CadastrarUsuarioCategoriaAvisosDTO cadastrarUsuarioCategoriaAvisosDTO = new ObjectMapper().readValue(inputLine, CadastrarUsuarioCategoriaAvisosDTO.class);
-                    return new CadastroUsuarioCategoriaAvisosCommand(cadastrarUsuarioCategoriaAvisosDTO, userService, categoryService, userCategoryService, responseService, responseFormatter, out, clientAddress);
+                    CadastrarOuDescadastrarUsuarioCategoriaAvisosDTO cadastrarOuDescadastrarUsuarioCategoriaAvisosDTO = new ObjectMapper().readValue(inputLine, CadastrarOuDescadastrarUsuarioCategoriaAvisosDTO.class);
+                    return new CadastroUsuarioCategoriaAvisosCommand(cadastrarOuDescadastrarUsuarioCategoriaAvisosDTO, userService, categoryService, userCategoryService, responseService, responseFormatter, out, clientAddress);
                 } catch (IOException e) {
                     ResponseDTO responseDTO = responseService.createErrorResponse("cadastrarUsuarioCategoria", "Não foi possível ler o json recebido");
+                    String response = responseFormatter.formatResponse(responseDTO);
+                    System.out.println("Server (" + clientAddress + "): " + response);
+                    out.println(response);
+                }
+//            case "listarUsuarioCategorias":
+//                try {
+//                    OperacaoComTokenERaDTO operacaoComTokenERaDTO = new ObjectMapper().readValue(inputLine, OperacaoComTokenERaDTO.class);
+//                    return new ListarUsuarioCategoriaAvisosCommand(operacaoComTokenERaDTO, userService, userCategoryService, responseService, responseFormatter, out, clientAddress);
+//                } catch (IOException e) {
+//                    ResponseDTO responseDTO = responseService.createErrorResponse("listarUsuarioCategorias", "Não foi possível ler o json recebido");
+//                    String response = responseFormatter.formatResponse(responseDTO);
+//                    System.out.println("Server (" + clientAddress + "): " + response);
+//                    out.println(response);
+//                }
+            case "descadastrarUsuarioCategoria":
+                try {
+                    CadastrarOuDescadastrarUsuarioCategoriaAvisosDTO descadastrarUsuarioCategoriaAvisosDTO = new ObjectMapper().readValue(inputLine, CadastrarOuDescadastrarUsuarioCategoriaAvisosDTO.class);
+                    return new DescadastroUsuarioCategoriaAvisosCommand(descadastrarUsuarioCategoriaAvisosDTO, userService, categoryService, userCategoryService, responseService, responseFormatter, out, clientAddress);
+                } catch (IOException e) {
+                    ResponseDTO responseDTO = responseService.createErrorResponse("descadastrarUsuarioCategoria", "Não foi possível ler o json recebido");
                     String response = responseFormatter.formatResponse(responseDTO);
                     System.out.println("Server (" + clientAddress + "): " + response);
                     out.println(response);

@@ -1,6 +1,7 @@
 package com.UTFPR.server.repository;
 
 import com.UTFPR.domain.entities.Category;
+import com.UTFPR.domain.entities.User;
 import com.UTFPR.domain.entities.UserCategory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -23,6 +24,16 @@ public class UserCategoryRepository {
 //            throw e;
 //        }
 //    }
+
+    public List<UserCategory> listAllCategoriesByUser(User user) {
+        try {
+            TypedQuery<UserCategory> query = em.createQuery("SELECT uc FROM usuarios_categorias uc WHERE uc.user = :usuario", UserCategory.class);
+            query.setParameter("usuario", user);
+            return query.getResultList();
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 
 //    public List<Category> findCategoryById(Long id) {
 //        try {
@@ -51,13 +62,13 @@ public class UserCategoryRepository {
         em.getTransaction().commit();
     }
 
-//    public void deleteCategory(Category category) {
-//        em.getTransaction().begin();
-//        em.remove(category);
-//        em.flush();
-//        em.clear();
-//        em.getTransaction().commit();
-//    }
+    public void deleteUserCategory(UserCategory userCategory) {
+        em.getTransaction().begin();
+        em.remove(userCategory);
+        em.flush();
+        em.clear();
+        em.getTransaction().commit();
+    }
 //
 //    public void editCategoryById(Long id, Category category) {
 //        em.getTransaction().begin();

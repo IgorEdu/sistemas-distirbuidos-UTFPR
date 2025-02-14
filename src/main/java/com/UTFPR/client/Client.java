@@ -121,6 +121,10 @@ public class Client {
                         command = new CadastrarUsuarioCategoriaAvisosCommand(out, stdIn, objectMapper, token);
                         command.execute();
                         break;
+                    case "9":
+                        command = new DescadastrarUsuarioCategoriaAvisosCommand(out, stdIn, objectMapper, token);
+                        command.execute();
+                        break;
                     case "a1":
                         command = new ListarUsuariosCommand(out, stdIn, objectMapper, token);
                         command.execute();
@@ -240,6 +244,7 @@ public class Client {
         System.out.println("\t6 - listar avisos");
         System.out.println("\t7 - localizar aviso");
         System.out.println("\t8 - cadastrar usuario em categoria de avisos");
+        System.out.println("\t9 - descadastrar usuario em categoria de avisos");
 
         if (token.equals("9999999")) {
             System.out.println("-----------------------------");

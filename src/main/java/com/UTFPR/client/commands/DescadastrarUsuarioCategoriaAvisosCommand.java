@@ -8,13 +8,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class CadastrarUsuarioCategoriaAvisosCommand implements Command {
+public class DescadastrarUsuarioCategoriaAvisosCommand implements Command {
     private PrintWriter out;
     private BufferedReader stdIn;
     private ObjectMapper objectMapper;
     private final String token;
 
-    public CadastrarUsuarioCategoriaAvisosCommand(PrintWriter out, BufferedReader stdIn, ObjectMapper objectMapper, String token) {
+    public DescadastrarUsuarioCategoriaAvisosCommand(PrintWriter out, BufferedReader stdIn, ObjectMapper objectMapper, String token) {
         this.out = out;
         this.stdIn = stdIn;
         this.objectMapper = objectMapper;
@@ -45,7 +45,7 @@ public class CadastrarUsuarioCategoriaAvisosCommand implements Command {
             idCategoria = Integer.parseInt(temp);
         } while (!temp.matches("^[0-9]+$") || temp.equals("0"));
 
-         CadastrarOuDescadastrarUsuarioCategoriaAvisosDTO cadastrarUsuarioCategoriaAvisoDTO = new CadastrarOuDescadastrarUsuarioCategoriaAvisosDTO("cadastrarUsuarioCategoria", token, ra, idCategoria);
+        CadastrarOuDescadastrarUsuarioCategoriaAvisosDTO cadastrarUsuarioCategoriaAvisoDTO = new CadastrarOuDescadastrarUsuarioCategoriaAvisosDTO("descadastrarUsuarioCategoria", token, ra, idCategoria);
 
         String json = objectMapper.writeValueAsString(cadastrarUsuarioCategoriaAvisoDTO);
         System.out.println("Client: " + json);

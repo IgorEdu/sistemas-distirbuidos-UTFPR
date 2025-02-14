@@ -2,6 +2,7 @@ package com.UTFPR.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
@@ -19,6 +20,9 @@ public class ResponseDTO {
     private List<UsuarioDTO> usuarios;
     private List<CategoriaDTO> categorias;
     private List<AvisoComInfoCategoriaDTO> avisosComInfoCategoria;
+
+//    @JsonProperty("categorias")
+//    private List<Integer> idsCategorias;
 
     public ResponseDTO() {
     }
@@ -101,5 +105,13 @@ public class ResponseDTO {
     public void setAviso(AvisoComInfoCategoriaDTO aviso) {
         this.aviso = aviso;
     }
+
+//    public List<Integer> getIdsCategorias() {
+//        return idsCategorias;
+//    }
+//
+//    public void setIdsCategorias(List<Integer> idsCategorias) {
+//        this.idsCategorias = idsCategorias;
+//    }
 }
 

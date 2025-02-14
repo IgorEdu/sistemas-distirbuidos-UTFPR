@@ -194,4 +194,16 @@ public class ResponseService {
             throw new RuntimeException("Erro ao serializar categorias", e);
         }
     }
+
+//    public ResponseDTO returnSuccessResponseListCategoriesByUser(String operacao, List<Integer> categorias) {
+//        try {
+//            ResponseDTO response = new ResponseDTO();
+//            response.setStatus(201);
+//            response.setOperacao(operacao);
+//            response.setIdsCategorias(categorias);
+//            return response;
+//        } catch (Exception e) {
+//            throw new RuntimeException("Erro ao serializar categorias", e);
+//        }
+//    }
 }
