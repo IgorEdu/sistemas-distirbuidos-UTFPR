@@ -226,6 +226,16 @@ public class CommandFactory {
                     System.out.println("Server (" + clientAddress + "): " + response);
                     out.println(response);
                 }
+            case "listarUsuarioAvisos":
+                try {
+                    OperacaoComTokenERaDTO operacaoComTokenERaDTO = new ObjectMapper().readValue(inputLine, OperacaoComTokenERaDTO.class);
+                    return new ListarAvisosUsuarioCommand(operacaoComTokenERaDTO, userService, userCategoryService, noticeService, responseService, responseFormatter, out, clientAddress);
+                } catch (IOException e) {
+                    ResponseDTO responseDTO = responseService.createErrorResponse("descadastrarUsuarioCategoria", "Não foi possível ler o json recebido");
+                    String response = responseFormatter.formatResponse(responseDTO);
+                    System.out.println("Server (" + clientAddress + "): " + response);
+                    out.println(response);
+                }
             default:
                 return new FallbackCommand(operacaoDTO.getOperacao(),
                         "Operacao nao encontrada",

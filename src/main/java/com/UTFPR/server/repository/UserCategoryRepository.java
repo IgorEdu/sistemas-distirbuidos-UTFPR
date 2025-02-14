@@ -35,6 +35,7 @@ public class UserCategoryRepository {
         }
     }
 
+
 //    public List<Category> findCategoryById(Long id) {
 //        try {
 //            TypedQuery<Category> query = em.createQuery("SELECT c FROM categorias c WHERE c.id = :id", Category.class);

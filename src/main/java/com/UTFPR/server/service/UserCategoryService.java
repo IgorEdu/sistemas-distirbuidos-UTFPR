@@ -1,6 +1,8 @@
 package com.UTFPR.server.service;
 
+import com.UTFPR.domain.dto.AvisoDTO;
 import com.UTFPR.domain.entities.Category;
+import com.UTFPR.domain.entities.Notice;
 import com.UTFPR.domain.entities.User;
 import com.UTFPR.domain.entities.UserCategory;
 import com.UTFPR.server.repository.CategoryRepository;
@@ -32,13 +34,24 @@ public class UserCategoryService {
     public void registerUserCategory(UserCategory userCategory) {
         userCategoryRepository.save(userCategory);
     }
-//
-//
-//    public Category getCategoryById(int id) {
-//        List<Category> categories = categoryRepository.findCategoryById((long) id);
-//        return categories.isEmpty() ? null : categories.get(0);
-//    }
-//
+
+    public List<Notice> getAllNoticesByUser(User user, NoticeService noticeService) {
+        List<UserCategory> userCategories = userCategoryRepository.listAllCategoriesByUser(user);
+        List<Integer> idsCategories = new ArrayList<>();
+        List<Notice> noticesByUser = new ArrayList<>();
+
+        for(UserCategory userCategory : userCategories){
+            idsCategories.add((int) userCategory.getCategory().getId());
+        }
+
+        for(Integer id : idsCategories){
+            List<Notice> noticesByCategory = noticeService.getAllNoticesOfCategory(id);
+            noticesByUser.addAll(noticesByCategory);
+        }
+
+        return idsCategories.isEmpty() ? null : noticesByUser;
+    }
+
     public List<Integer> getAllCategoriesByUser(User user) {
         List<UserCategory> userCategories = userCategoryRepository.listAllCategoriesByUser(user);
         List<Integer> idsCategories = new ArrayList<>();
@@ -54,15 +67,4 @@ public class UserCategoryService {
     public void deleteUserCategory(UserCategory userCategory){
         userCategoryRepository.deleteUserCategory(userCategory);
     }
-
-//    @Transactional
-//    public void editCategoryById(int id, Category categoryEdited){
-//        categoryRepository.editCategoryById((long)id, categoryEdited);
-//    }
-//
-//    public boolean isPresentOnWarnings(int id) {
-////        List<Category> categories = categoryRepository.isPresentOnWarning(id);
-////        return !categories.isEmpty();
-//        return false;
-//    }
 }
