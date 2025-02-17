@@ -1,4 +1,4 @@
-package com.UTFPR;
+package com.UTFPR.server;
 
 import com.UTFPR.controller.ServerController;
 import com.UTFPR.server.service.ServerService;

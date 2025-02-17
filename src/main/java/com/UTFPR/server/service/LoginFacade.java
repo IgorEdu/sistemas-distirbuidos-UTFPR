@@ -2,9 +2,13 @@ package com.UTFPR.server.service;
 
 import com.UTFPR.domain.dto.LoginDTO;
 import com.UTFPR.domain.dto.ResponseDTO;
+import com.UTFPR.domain.entities.User;
 import jakarta.persistence.PersistenceException;
 
 import java.io.IOException;
+
+import static com.UTFPR.server.service.UserSessionService.atualizarUsuarioAtivo;
+
 
 public class LoginFacade {
     private final UserService userService;
@@ -50,6 +54,9 @@ public class LoginFacade {
             responseDTO = responseService.createSuccessResponseWithToken(loginDTO.getOperacao(), token);
             formattedResponse = responseFormatter.formatResponse(responseDTO);
             System.out.println("Server (" + clientAddress + "): " + formattedResponse);
+
+            User user = userService.getUserByRa(loginDTO.getRa());
+            atualizarUsuarioAtivo(user.getNome(),user.getRa());
         } catch (PersistenceException e) {
             responseDTO = responseService.createErrorResponse(
                     loginDTO.getOperacao(),

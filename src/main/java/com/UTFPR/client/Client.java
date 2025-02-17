@@ -26,6 +26,8 @@ public class Client {
         String serverIP;
         int serverPort;
         String token = null;
+        String adminRa = null;
+        String adminSenha = null;
 
         if (args.length == 0) {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -39,6 +41,8 @@ public class Client {
             serverIP = args[0];
             serverPort = Integer.parseInt(args[1]);
             token = args[2];
+            adminRa = args[3];
+            adminSenha = args[4];
         }
 
         Socket serverSocket = null;
@@ -70,7 +74,7 @@ public class Client {
         String raUsuarioExcluido = null;
 
         do {
-            token = menuInicial(stdIn, token, in, out, serverSocket, objectMapper);
+            token = menuInicial(stdIn, token, adminRa, adminSenha, in, out, serverSocket, objectMapper);
 
             if (token == null) {
                 break;
@@ -78,7 +82,7 @@ public class Client {
 
             System.out.println("Usuário conectado...");
             System.out.println();
-            buscaListagemDeAvisosDoUsuario(out, stdIn, objectMapper, token);
+            buscaListagemDeAvisosDoUsuario(out, in, objectMapper, token);
             apresentarMenu(token);
 
 
@@ -190,6 +194,8 @@ public class Client {
 
     private static String menuInicial(BufferedReader stdIn,
                                       String token,
+                                      String adminRa,
+                                      String adminSenha,
                                       BufferedReader in,
                                       PrintWriter out,
                                       Socket serverSocket,
@@ -202,14 +208,18 @@ public class Client {
         System.out.println("\t0 - sair");
         System.out.print("input: ");
 
-        while ((userInput = stdIn.readLine()) != null && token == null) {
+        while ((userInput = stdIn.readLine()) != null) {
             Command command;
             switch (userInput) {
                 case "0":
                     encerrar(stdIn, out, in, serverSocket);
                     return null;
                 case "1":
-                    command = new LoginCommand(out, stdIn, objectMapper);
+                    if(adminRa != null && adminSenha != null){
+                        command = new LoginCommand(out, stdIn, objectMapper, adminRa, adminSenha);
+                    } else {
+                        command = new LoginCommand(out, stdIn, objectMapper);
+                    }
                     command.execute();
                     break;
                 case "2":
@@ -240,11 +250,11 @@ public class Client {
         return token;
     }
 
-    private static void buscaListagemDeAvisosDoUsuario(PrintWriter out, BufferedReader stdIn, ObjectMapper objectMapper, String token) throws IOException {
-        Command command = new ListarAvisosUsuarioInicialCommand(out, stdIn, objectMapper, token);
+    private static void buscaListagemDeAvisosDoUsuario(PrintWriter out, BufferedReader in, ObjectMapper objectMapper, String token) throws IOException {
+        Command command = new ListarAvisosUsuarioInicialCommand(out, in, objectMapper, token);
         command.execute();
 
-        String responseServer = stdIn.readLine();
+        String responseServer = in.readLine();
         System.out.println("Server: " + responseServer);
     }
 

@@ -1,7 +1,6 @@
 package com.UTFPR.server.commands;
 
 import com.UTFPR.domain.dto.LoginDTO;
-import com.UTFPR.domain.dto.ResponseDTO;
 import com.UTFPR.server.service.LoginFacade;
 import com.UTFPR.server.service.ResponseFormatter;
 import com.UTFPR.server.service.ResponseService;

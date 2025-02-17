@@ -1,10 +1,10 @@
 package com.UTFPR.controller;
 
+import com.UTFPR.domain.entities.User;
 import com.UTFPR.server.infra.DatabaseConnection;
 import com.UTFPR.server.repository.UserRepository;
 import com.UTFPR.server.service.ServerService;
 import com.UTFPR.server.service.UserService;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,6 +15,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+
+import static com.UTFPR.server.service.UserSessionService.atualizarUsuarioAtivo;
 
 public class ServerController {
     @FXML
@@ -30,7 +32,6 @@ public class ServerController {
 
     public ServerController() {
         this.serverService = new ServerService();
-//        this.usuariosLogados = new ArrayList<>();
     }
 
     @FXML
@@ -85,8 +86,10 @@ public class ServerController {
                 String serverIP = "127.0.0.1";
                 int serverPort = port;
                 String token = "9999999";
+                String login = "9999999";
+                String senha = "adminadmin";
 
-                com.UTFPR.client.Client.main(new String[]{serverIP, String.valueOf(serverPort), token});
+                com.UTFPR.client.Client.main(new String[]{serverIP, String.valueOf(serverPort), token, login, senha});
             } catch (Exception e) {
                 System.err.println("Erro ao iniciar o cliente: " + e.getMessage());
                 e.printStackTrace();
